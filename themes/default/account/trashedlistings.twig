@@ -1,0 +1,126 @@
+{% extends "account.master" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_ads.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block user_area %}
+	<section id="content">
+		<div id="seller-panel">
+			{% include 'account.head_vendor_bar.twig' %}
+			{% if app.session.get('message') %}
+				<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+					<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+					<div>
+						{{ app.session.get('message') | raw }}
+					</div>
+				</div>
+			{% endif %}
+			{% if app.session.get('error') %}
+						<div class="mp-Alert mp-Alert--error">
+							<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+							<div>
+								{{ app.session.get('error') | raw }}
+							</div>
+						</div>
+			{% endif %}
+			<div class="canvas">
+				<div id="ad-listing-table" class="table ad-listing-container seller">
+					<div id="table-head-stickies">
+						<div id="ad-listing-header" class="table-head ad-listing compact">
+							<div class="row">
+								<div style="width:21%;margin:5px;" class="cell select-column">
+									<div id="tableActionPanel">
+										<form action="{{ route('account.permanent.listings') }}" method="post">
+											{{ csrf_field() }}
+											<button type="submit" class="mp-Button mp-Button--primary mp-Button--xs">
+												<span class="mp-Icon mp-svg-delete-white"></span>
+												{{ __('messages.account_listings_permanent_delete')}}
+											</button>
+										</div>
+									</div>
+										<div class="cell views-column">
+										<span>{{ __('messages.account_listings_prod')}}</span>
+									</div>
+									<div class="cell views-column">
+										<span>{{ __('messages.wallet_table_3')}}</span>
+									</div>
+									<div class="cell views-column">
+										<span>{{ __('messages.profile_store_sold')}}</span>
+									</div>
+									<div class="cell views-column">
+										<span>{{ __('messages.account_listings_supp')}}</span>
+									</div>
+									<div class="cell views-column">
+										<span>{{ __('messages.profile_store_views')}}</span>
+									</div>
+									<div class="cell position-column">
+										<span>{{ __('messages.account_listings_action')}}</span>
+										<a style="float:right;" href="/account/listings" class="mp-Button mp-Button--primary mp-Button--xs">
+												{{ __('messages.account_listings_go_back')}}
+											</a>
+									</div>
+								</div>
+							</div>
+							<div id="scroll-under-top-border"></div>
+						</div>
+						{% for item in listings %}
+							<div id="ad-listing-table-body" class="table-body">
+								<div class="row ad-listing compact">
+									<div class="cells">
+										<div class="cell icon-column middle">
+											<input name="ids[]" value="{{ item.id }}" type="checkbox">
+										</div>
+										<div class="cell thumbnail-column">
+											<a href="{{route('listing', {'id' : item, 'slug' : str_slug(item.title)})}}">
+												<img src="{{item.getPhoto()}}">
+											</a>
+											<div class="flex-row">
+												<span style="font-size:12px;" class="type">{{ToUserCurrency(item.price,item.currency)}} {{auth_user().currency|upper}}</span>
+											</div>
+										</div>
+										<div class="cell description-column" style="width: 16%;">
+											<div class="description-title">
+												<a href="{{route('listing', {'id' : item, 'slug' : str_slug(item.title)})}}">
+													<span>{{item.title}}</span><br>
+												</a>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="listing-status">
+												<div class="activity disabled">{{ __('messages.account_listings_deleted')}}</div>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="listing-status">
+												<div class="activity">{{item.orders.count()}}</div>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="listing-status">
+												<div class="activity">{{item.quantity == -1 ? __('messages.listing_unlimited') : item.quantity}}</div>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="amount">
+												<span class="mp-Icon mp-Icon--sm mp-svg-eye-open-grey mp-hide-sm"></span>
+												{{item.views_count}}</div>
+										</div>
+										<div class="cell position-column features-column" style="width: 26%;">
+											<div class="cta">
+												<a href="{{ route('account.restore.listings',item.id) }}" class="mp-Button--xs mp-Button--primary">
+													{{ __('messages.account_listings_restore')}}
+												</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</form>
+			</div>
+		</div>
+	</div>
+</section>{% endblock %}
+

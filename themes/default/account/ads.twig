@@ -1,0 +1,349 @@
+{% extends "account.master" %}
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_email.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+	<section style="margin-bottom: 800px;" id="content">
+		{% include 'account.head_vendor_bar.twig' %}
+		<div class="profile canvas" id="edit-email-panel">
+			<div class="mp-Card mp-Card--rounded">
+				<div class="mp-Card-block">
+					<form method="POST" action="{{route('account.ads.buyingads',listing)}}">
+						{{ csrf_field() }}
+						<div class="edit-profile-block clear-fix">
+							{% if app.session.get('message') %}
+								<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+									<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+									<div>
+										{{ app.session.get('message') }}
+									</div>
+								</div>
+							{% endif %}
+
+							{% if app.session.get('error') %}
+								<div class="mp-Alert mp-Alert--error">
+									<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+									<div>
+										{{ app.session.get('error') }}
+									</div>
+								</div>
+							{% endif %}
+							Listing :
+							<a href="{{route('listing', {'id' : listing, 'slug' : str_slug(listing.title)})}}">{{listing.title}}</a>
+							&nbsp;&nbsp; {{ __('messages.listing_categories')}} :
+							<a href="/category/{{listing.category.id}}">{{listing.category.name}}</a>
+							<div class="mp-Card-block">
+								<h1 class="heading">{{ __('messages.ads_purschase_a3')}} </h1>
+							</div>
+							<div class="form-field">
+								<span class="help-block">{{ __('messages.ads_purschase_a3_text')|raw}}</span>
+							</div>
+							<div class="form-field">
+								{{ __('messages.currently_available')}}
+								<button class="mp-Button mp-Button--dangerous mp-Button--xs" disabled>
+									{{count}}
+								</button>
+								{{ __('messages.currently_available1')}}
+							</div>
+							<div class="form-field">
+								<h3 class="heading heading-3">
+									<b>{{ __('messages.example')}} Star A+++</b>
+								</h3>
+								<div class="mp-Card-trevor philips">
+									<article style="height: 350px;width: 23%;" class="mp-Listing-card feed-item">
+										<div class="mp-Listing-card-body">
+											<a class="mp-Listing-card-clickable-container" href="{{route('listing', {'id' : listing, 'slug' : str_slug(listing.title)})}}">
+												<figure class="mp-Listing-card-image" style="height: 250px;background-image: url('{{listing.getPhoto()}}')"></figure>
+												<div class="mp-Listing-card-content">
+													<h4 class="mp-Listing-card-title">{{listing.title}}</h4>
+													<span class="mp-Listing-card-price">
+														<span class="price-old">
+															{{ToUserCurrency(listing.price,listing.currency)}}
+															{{auth_user().currency|upper}}</span><br>
+													</span>
+													<p class="card-label">{{listing.user.username}}({{listing.user.orders.count}})(5.0<span class="mp-StarRating mp-StarRating--xs mp-StarRating--5">
+															<i></i>
+														</span>)</p>
+												</div>
+											</a>
+										</div>
+									</article>
+								</div>
+							</div>
+							<div class="form-field">
+								<h3 class="heading heading-3">
+									<b>Ads Star A+++ {{ __('messages.order_item5')}} :</b>
+									{% if listing.spotlight|date('Y-m-d H:i:s') > 'now'|date('Y-m-d H:i:s') %}
+										<span style="color:green;">{{ __('messages.active')}}</span><br>
+										<span class="help-block">{{ __('messages.ads_over')}}</span>
+										<button class="mp-Button mp-Button--success mp-Button--xs" disabled>
+											{{ listing.elapsed('spotlight').days }}
+											days
+											{{ listing.elapsed('spotlight').hours }}
+											hours
+											{{listing.elapsed('spotlight').minutes}}
+											min
+											{{listing.elapsed('spotlight').seconds}}
+											sec
+										</button>
+									{% else %}
+										<span style="color:red;">{{ __('messages.not_active')}}</span>
+									{% endif %}
+								</div>
+								<div class="form-field">
+									{% if count != 0 and listing.spotlight < 'now'|date('Y-m-d H:i:s') %}
+										<button name="stara3" value="xmr" type="submit" class="primary medium mp-Button mp-Button--primary">
+											<span>{{ __('messages.listing_purschase_with')}}
+												{{ GetXMRPrice(60,"USD","yes") }}
+												XMR</span>
+										</button>
+										<button name="stara3" value="btc" type="submit" class="primary medium mp-Button mp-Button--primary">
+											<span>{{ __('messages.listing_purschase_with')}}
+												{{ GetBTCPrice(60,"USD","yes") }}
+												BTC</span>
+										</button>
+										<button name="stara3" value="ltc" type="submit" class="primary medium mp-Button mp-Button--primary">
+											<span>{{ __('messages.listing_purschase_with')}}
+												{{ GetLTCPrice(60,"USD","yes") }}
+												LTC</span>
+										</button>
+									{% else %}
+										<button class="mp-Button mp-Button--success mp-Button--xs" disabled>
+											{{ __('messages.carts_no')}}
+										</button>
+									{% endif %}
+								</div>
+
+							</div>
+						</form>
+					</div>
+				</div>
+				<hr>
+				<div class="mp-Card mp-Card--rounded">
+					<div class="mp-Card-block">
+						<form method="POST" action="{{route('account.ads.buyingads',listing)}}">
+							{{ csrf_field() }}
+							<div class="edit-profile-block clear-fix">
+								<div class="mp-Card-block">
+									<h1 class="heading">{{ __('messages.ads_purschase_a2')}}</h1>
+								</div>
+								<div class="form-field">
+									<span class="help-block">{{ __('messages.ads_purschase_a2_text')|raw}}</span>
+								</div>
+
+								<div class="form-field">
+									<h3 class="heading heading-3">
+										<b>{{ __('messages.example')}} Star A++</b>
+									</h3>
+									<li style="background-color: #F7F7F6;" class="mp-Listing mp-Listing--list-item">
+										<a href="{{route('listing', {'id' : listing, 'slug' : str_slug(listing.title)})}}" class="mp-Listing-coverLink">
+											<figure class="mp-Listing-image-container">
+												<div class="mp-Listing-image-item mp-Listing-image-item--main">
+													<img title="Cloned ads1s" src="{{listing.getPhoto()}}">
+												</div>
+											</figure>
+											<div class="mp-Listing-group">
+												<div class="mp-Listing-group--title-description-attributes">
+													<h3 class="mp-Listing-title">{{listing.title}}</h3>
+												</div>
+												<div class="mp-Listing-group--price-date-feature">
+													<span class="mp-Listing-price mp-text-price-label">{{ToUserCurrency(listing.price,listing.currency)}}
+														{{auth_user().currency|upper}}</span>
+												</div>
+											</div>
+										</a>
+										<div class="mp-Listing--sellerInfo">
+											<span class="mp-Listing-seller-name">
+												<a href="/profile/{{listing.user.username}}">{{listing.user.username}}({{listing.user.orders.count}})(5.0<span class="mp-StarRating mp-StarRating--xs mp-StarRating--5">
+														<i></i>
+													</span>)</a>
+											</span>
+											<span class="mp-Listing-location">WW⟶ WW ({{ __('messages.example')}})
+												<br><b>Ads</b>
+											</span>
+											<span class="mp-Listing-seller-link">
+												{{ __('messages.profile_store_sold')}}:
+												{{listing.orders.count}}</span>
+										</div>
+									</li>
+								</div>
+								<div class="form-field">
+									<h3 class="heading heading-3">
+										<b>Ads Star A++ {{ __('messages.order_item5')}} :</b>
+										{% if listing.priority_until|date('Y-m-d H:i:s') > 'now'|date('Y-m-d H:i:s') %}
+											<span style="color:green;">{{ __('messages.active')}}</span><br>
+											<span class="help-block">{{ __('messages.ads_over')}}</span>
+											<button class="mp-Button mp-Button--success mp-Button--xs" disabled>
+												{{ listing.elapsed('priority_until').days }}
+												days
+												{{ listing.elapsed('priority_until').hours }}
+												hours
+												{{listing.elapsed('priority_until').minutes}}
+												min
+												{{listing.elapsed('priority_until').seconds}}
+												sec
+											</button>
+										{% else %}
+											<span style="color:red;">{{ __('messages.not_active')}}</span>
+										{% endif %}
+									</div>
+
+									<div class="form-field">
+										{% if listing.priority_until|date('Y-m-d H:i:s') < 'now'|date('Y-m-d H:i:s') %}
+											<button name="stara2" value="xmr" type="submit" class="primary medium mp-Button mp-Button--primary">
+												<span>{{ __('messages.listing_purschase_with')}}
+													{{ GetXMRPrice(10,"USD","yes") }}
+													XMR</span>
+											</button>
+											<button name="stara2" value="btc" type="submit" class="primary medium mp-Button mp-Button--primary">
+												<span>{{ __('messages.listing_purschase_with')}}
+													{{ GetBTCPrice(10,"USD","yes") }}
+													BTC</span>
+											</button>
+											<button name="stara2" value="ltc" type="submit" class="primary medium mp-Button mp-Button--primary">
+												<span>{{ __('messages.listing_purschase_with')}}
+													{{ GetLTCPrice(10,"USD","yes") }}
+													LTC</span>
+											</button>
+										{% else %}
+											<button class="mp-Button mp-Button--success mp-Button--xs" disabled>
+												{{ __('messages.active')}}
+											</button>
+										{% endif %}
+
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<hr>
+					<div class="mp-Card mp-Card--rounded">
+						<div class="mp-Card-block">
+							<form method="POST" action="{{route('account.ads.buyingads',listing)}}">
+								{{ csrf_field() }}
+								<div class="edit-profile-block clear-fix">
+									<div class="mp-Card-block">
+										<h1 class="heading">{{ __('messages.ads_purschase_a1')}}</h1>
+									</div>
+									<div class="form-field">
+										<span class="help-block">{{ __('messages.ads_purschase_a1_text')|raw}}</span>
+									</div>
+
+									<div class="form-field">
+										<h3 class="heading heading-3">
+											<b>{{ __('messages.example')}} Star A+</b>
+										</h3>
+										<li style="background-color: #F7F7F6;" class="mp-Listing mp-Listing--list-item">
+											<a href="{{route('listing', {'id' : listing, 'slug' : str_slug(listing.title)})}}" class="mp-Listing-coverLink">
+												<figure class="mp-Listing-image-container">
+													<div class="mp-Listing-image-item mp-Listing-image-item--main">
+														<img title="{{listing.title}}" src="{{listing.getPhoto()}}">
+													</div>
+												</figure>
+												<div class="mp-Listing-group">
+													<div class="mp-Listing-group--title-description-attributes">
+														<h3 class="mp-Listing-title">{{listing.title}}</h3>
+													</div>
+													<div class="mp-Listing-group--price-date-feature">
+														<span class="mp-Listing-price mp-text-price-label">{{ToUserCurrency(listing.price,listing.currency)}}
+															{{auth_user().currency|upper}}</span>
+													</div>
+												</div>
+											</a>
+											<div class="mp-Listing--sellerInfo">
+												<span class="mp-Listing-seller-name">
+													<a href="/profile/{{listing.user.username}}">{{listing.user.username}}({{listing.user.orders.count}})(5.0<span class="mp-StarRating mp-StarRating--xs mp-StarRating--5">
+															<i></i>
+														</span>)</a>
+												</span>
+												<span class="mp-Listing-location">WW⟶ WW ({{ __('messages.example')}})
+													<br><b>Ads</b>
+												</span>
+												<span class="mp-Listing-seller-link">
+													{{ __('messages.profile_store_sold')}}:
+													{{listing.orders.count}}</span>
+											</div>
+										</li>
+										<li class="mp-Listing mp-Listing--other-seller">
+											<div class="mp-Listing-other-seller-content mp-Listing-other-seller-content--left mp-text-paragraph">Also from this vendor</div>
+											<div class="mp-Listing-other-seller-content mp-Listing-other-seller-content--center">
+											 {% if listing.childs.count != 0  %}
+												{% for adslisted in listing.childs.slice(0,3) %}
+													<a href="{{route('listing', {'id' : adslisted, 'slug' : str_slug(adslisted.title)})}}" class="mp-Listing-other-seller-items {{listing.childs[0] == adslisted ? 'mp-Listing-other-seller-items--default' :  ''}}">
+														<div class="mp-Listing-other-seller-image-container"><img src="{{adslisted.photo}}"></div>
+														<div class="mp-Listing-other-seller-info-container">
+															<h3 class="mp-TextLink">{{adslisted.title}}</h3>
+															<div class="mp-text-price-label">{{ToUserCurrency(adslisted.price,adslisted.currency)}}
+																{{auth_user().currency|upper}}</div>
+														</div>
+													</a>
+												{% endfor %}
+											{% else %}
+											{{ __('messages.ads_no_child')}}
+											{% endif %}
+											</div>
+											<div class="mp-Listing-other-seller-content mp-Listing-other-seller-content--right">
+												<a class="mp-TextLink" href="/profile/{{listing.user.username}}">{{ __('messages.carts_view_all')}}<span class="mp-Icon mp-svg-arrow-right-blue"></span>
+												</a>
+											</div>
+										</li>
+									</div>
+
+									<div class="form-field">
+										<h3 class="heading heading-3">
+											<b>Ads Star A+ {{ __('messages.order_item5')}} :</b>
+											{% if listing.bold_until|date('Y-m-d H:i:s') > 'now'|date('Y-m-d H:i:s')  %}
+												<span style="color:green;">{{ __('messages.active')}}</span><br>
+												<span class="help-block">{{ __('messages.ads_over')}}</span>
+												<button class="mp-Button mp-Button--success mp-Button--xs" disabled>
+													{{ listing.elapsed('bold_until').days }}
+													days
+													{{ listing.elapsed('bold_until').hours }}
+													hours
+													{{listing.elapsed('bold_until').minutes}}
+													min
+													{{listing.elapsed('bold_until').seconds}}
+													sec
+												</button>
+											{% else %}
+												<span style="color:red;">{{ __('messages.not_active')}}</span>
+											{% endif %}
+										</div>
+										<div class="form-field">
+										{% if listing.parent_id == 0 %}
+											{% if listing.bold_until|date('Y-m-d H:i:s') < 'now'|date('Y-m-d H:i:s') or listing.bold_until == null %}
+												<button name="stara1" value="xmr" type="submit" class="primary medium mp-Button mp-Button--primary">
+													<span>{{ __('messages.listing_purschase_with')}}
+														{{ GetXMRPrice(5,"USD","yes") }}
+														XMR</span>
+												</button>
+												<button name="stara1" value="btc" type="submit" class="primary medium mp-Button mp-Button--primary">
+													<span>{{ __('messages.listing_purschase_with')}}
+														{{ GetBTCPrice(5,"USD","yes") }}
+														BTC</span>
+												</button>
+												<button name="stara1" value="ltc" type="submit" class="primary medium mp-Button mp-Button--primary">
+													<span>{{ __('messages.listing_purschase_with')}}
+														{{ GetLTCPrice(5,"USD","yes") }}
+														LTC</span>
+												</button>
+											{% else %}
+												<button class="mp-Button mp-Button--success mp-Button--xs" disabled>
+													{{ __('messages.active')}}
+												</button>
+											{% endif %}
+										</div>
+										{% else %}
+										{{ __('messages.ads_no_child')}}
+										{% endif %}
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+			{% endblock %}
+

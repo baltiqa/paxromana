@@ -1,0 +1,57 @@
+{% extends "layouts.frontpage" %}
+
+{% block css %}
+<link href="{{ env('WEBSITE_URL') }}/web/css/index.css" rel="stylesheet">
+{% endblock %}
+{% block navbar %}
+	<header>
+		<div class="mp-Header-ribbonTop"></div>
+		<div class="mp-Header-ribbonBottom"></div>
+	</header>
+{% endblock %}
+{% block content %}
+<div id="page-wrapper">
+		<div class="l-page pagelog">
+        <section class="l-main-right">
+           <a class="pagelogo" href="/" title="Pax Romana"></a>
+           	{% include 'auth.flags.twig' %}
+               <div class="mp-Alert " style="background-color:#D4EFFA;">
+					<span class="mp-Alert-icon mp-svg-info"></span>
+					<div>
+						<li style="color:black;">{{ __('messages.session_title') }}</li>
+					</div>
+				</div>
+          <div class="mp-Alert " style="background-color:#D4EFFA;">
+							<span class="mp-Alert-icon mp-svg-info"></span>
+							<div>
+								<li style="color:black;">{{ __('messages.verify_text_how')|raw }} </li>
+							</div>
+			</div>
+            <div class="mp-Card mp-Card--rounded login">
+                <div class="mp-Card-block">
+                    <div class="mp-Form mp-Form--aligned">
+                            <textarea style="word-wrap: break-word;background-color: #EDECED; white-space: pre-wrap; line-height: normal; height:500px;width:500px;" readonly="readonly">
+{{message}}
+											</textarea>
+                    </div>
+                    <div class="mp-Form-controlGroup">
+                                              <a href="/" class="mp-Button mp-Button--primary">
+                                                <span>{{ __('messages.verify_return_back') }}</span>
+                                             </a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <div class="index-log mp-FooterAlternative ">
+						<a  href="http://dreadditevelidot.onion/d/RomanRoad">
+							<img width="30" title="Pax Romana Forum" src="/web/images/dread.png"/>
+						</a>
+						<span class="footer-draw"></span>
+							<a  href="http://raptortiabg7uyez.onion/">
+							<img width="30" title="Raptor Get your links safely" src="/web/images/raptor.png"/>
+						</a>
+				</div>
+    </div>
+</div>
+{% endblock %}

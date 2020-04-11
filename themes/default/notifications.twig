@@ -1,0 +1,68 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/notification.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+	<div id="page-wrapper" class="mymp">
+		<div class="l-page">
+			<h1 class="page-header">{{ __('messages.notification_head') }}</h1>
+			<div style="touch-action: pan-y; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+			{% if auth_user().notifications.count != null %}
+				{% for notification in auth_user().notifications %}
+				<div class="notification-item ">
+					<div class="swipe-action">
+						<span class="swipe-label">{{ __('messages.notifications_delete_1') }}</span>
+					</div>
+					<div class="mp-Listing-compact sdk-custom notification-content">
+						<div class="mp-Listing-compact-body">
+							<figure class="mp-Listing-compact-picture mp-Icon mp-Icon--xxl mp-svg-image-grey" style="background-image: url({{notification.data['image']}}); background-position: center center;"></figure>
+							<div class="mp-Listing-compact-content">
+								
+								<div class="mp-Listing-compact-title sdk-custom"></div>
+								<div class="notification-message {{notification.read_at == null ? 'unread' : ''}} ">
+									{% if notification.data['url']  == null %}{{notification.data['message']}}{% else  %}<a href="/notifications/go/{{notification.id}}">{{notification.data['message']}}</a>{% endif %}
+								</div>
+								<div class="actions"></div>
+								<div class="meta-data">
+									<span class="mp-Icon mp-Icon--xs mp-svg-megaphone-grey"></span>
+									<span class="timestamp">{{notification.created_at.diffForHumans}}</span>
+								</div>
+								<div class="remove-action">
+									<span class="mp-Icon mp-Icon--md mp-svg-delete"></span>
+								</div>
+									<div class="snippet-menu-toggle">
+									<span class="mp-Icon mp-Icon--lg mp-svg-arrow-down"></span>
+									<ul class="mp-Nav-dropdown-menu sdk-custom">
+										<li>
+											<a href="/notifications/delete/{{notification.id}}">{{ __('messages.notifications_delete_2') }}</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+				<a href="/notifications/markread" class="mp-Button mp-Button--primary mp-Button--lg">
+								<span>{{ __('messages.notifications_mark_read') }}</span>
+				</a>
+				<a href="/notifications/empty" class="mp-Button mp-Button--primary mp-Button--lg">
+				<span>{{ __('messages.notifications_empty_notification') }}</span>
+				</a>
+
+				{% else %}
+				<div class="empty-state-content">
+    <span aria-hidden="true" class="mp-Icon mp-svg-notification-grey sdk-custom"></span>
+    <h3 class="heading">{{ __('messages.notifications_no_not') }}</h3>
+    <p class="empty-state-text">{{ __('messages.notifications_no_not_text') }}</p>
+  </div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}

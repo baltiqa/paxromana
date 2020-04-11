@@ -1,0 +1,153 @@
+{% extends "account.master" %}
+
+{% block css %}
+<link href="{{ setting('url') }}/web/css/account_own_profile.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+	<div id="content">
+		<div style="margin-bottom: 50%;" class="mp-Card mp-Card--rounded">
+       			{% include 'account.head_normal_bar.twig' %}
+			<div class="mp-Card-block">
+				<form method="POST" action="{{ route('account.update.profile') }}"  enctype="multipart/form-data">
+					{{ csrf_field() }}
+					<div class="edit-profile-block clear-fix">
+						{% if app.session.get('message') %}
+							<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+								<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+								<div>
+									{{ app.session.get('message') }}
+								</div>
+							</div>
+						{% endif %}
+
+						{% if app.session.get('error') %}
+						<div class="mp-Alert mp-Alert--error">
+							<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+							<div>
+								{{ app.session.get('error') }}
+							</div>
+						</div>
+						{% endif %}
+
+						<div class="form-field">
+							<h3 class="heading heading-3">
+								<b>{{ __('messages.profile_title_image')}}</b>
+							</h3>
+							<span class="help-block">{{ __('messages.profile_title_image_text')}}</span>
+							<img style="width: 150px; height: 150px;" class="thumbnail" src="{{auth_user().avatar}}">
+							<input name="avatar_img" id="avatar_img" type="file">
+						</div>
+
+						<div class="form-field">
+							<h3 class="heading heading-3">
+								<b>{{ __('messages.profile_title_image_b')}}</b>
+							</h3>
+							<span class="help-block">{{ __('messages.profile_title_image_text_c')}}</span>
+							<img  style="width: 60%;" class="thumbnail" src="{{auth_user().avatar_background}}">
+							<input name="avatar_background_img" id="avatar_background_img" type="file">
+						</div>
+
+						<div class="form-field">
+							<h3 class="heading heading-3">
+								<b>{{ __('messages.profile_title_image_g')}}</b>
+							</h3>
+							<span class="help-block">{{ __('messages.profile_title_image_text_g')}}</span>
+							<textarea style="height:350px;" class="mp-Textarea {{ errors.has('bio') ? ' invalid' : '' }}" id="bio" name="bio">{{auth_user().bio}}</textarea>
+							<input id="message-box" type="checkbox">
+							</br>
+							</br>
+							<label for="message-box" class="mp-Button mp-Button--primary mp-Button--xs ">Romana {{ __('messages.listing_bbcodes')}}</label>
+							<div class="message">
+								<div class="popup">
+									<div class="message-box-header">
+										Romana {{ __('messages.listing_bbcodes')}}
+										<label for="message-box" class="close">
+											<span>×</span>
+										</label>
+									</div>
+									<div class="content">
+										<div class="form-field">
+											<table style="width:100%;">
+												<tr>
+													<th>{{ __('messages.listing_bbcodes1')}}</th>
+													<th></th>
+													<th>{{ __('messages.listing_bbcodes2')}}</th>
+												</tr>
+												<tr>
+													<td>[h1]Romana[/h1]</td>
+													<td></td>
+													<td><h1>Romana</h1></td>
+												</tr>
+												<tr>
+													<td>[h2]Romana[/h2]</td>
+													<td></td>
+													<td><h2>Romana</h2></td>
+												</tr>
+												<tr>
+													<td>[h3]Romana[/h3]</td>
+													<td></td>
+													<td><h3>Romana</h3></td>
+												</tr>
+												<tr>
+													<td>[b]Romana[/b]</td>
+													<td></td>
+													<td><b>Romana</b></td>
+												</tr>
+												<tr>
+													<td>[i]Romana[/i]</td>
+													<td></td>
+													<td><i>Romana</i></td>
+												</tr>
+												<tr>
+													<td>[u]Romana[/u]</td>
+													<td></td>
+													<td><u>Romana</u></td>
+												</tr>
+												<tr>
+													<td>[li]Romana[/li]</td>
+													<td></td>
+													<td><li style="list-style: square;">Romana</li></td>
+												</tr>
+												<tr>
+													<td>[color=red]Romana[/color]</td>
+													<td></td>
+													<td><span style="color:red;">Romana</spanspan></td>
+												</tr>
+												<tr>
+													<td>[color=white]Romana[/color]</td>
+													<td></td>
+													<td><span style="color:white;">Romana</spanspan></td>
+												</tr>
+												<tr>
+													<td>[color=blue]Romana[/color]</td>
+													<td></td>
+													<td><span style="color:blue;">Romana</spanspan></td>
+												</tr>
+											</table><br>
+											<b>{{ __('messages.listing_bbcodes_request')}}</b>
+										</div>
+									</div>
+									<div class="content-footer">
+										<div class="form-field">
+											<label for="message-box" class="mp-Button mp-Button--primary mp-Button--xs">{{ __('messages.listing_bbcodes_close')}}</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-field">
+							<button type="submit" id="confirm-profile" class="primary medium mp-Button mp-Button--primary">
+								<span>{{ __('messages.listing_save')}}</span>
+							</button>
+							<a id="cancel-profile" href="/account/edit_profile" class="secondary medium mp-Button mp-Button--secondary">
+								<span>{{ __('messages.profile_cancel')}}</span>
+							</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

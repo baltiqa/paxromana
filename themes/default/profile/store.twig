@@ -1,0 +1,51 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+<link href="/web/css/own_profile_detail.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+	<div id="page-wrapper">
+		<div id="content" class="l-page">
+			{% include 'profile.head-profile.twig' %}
+			<div class="mp-Page-element mp-Page-element--full-width mp-Page-element--breadCrumbAndSaveSearch">
+				<div class="mp-Nav-breadcrumb">
+					<h1 class="mp-Nav-breadcrumb-item">{{ __('messages.profile_store_total') }}
+						{{profile.listings.count()}}
+						{{ __("listings") }}
+						{{ __('messages.profile_store_products') }}</h1>
+				</div>
+			</div>
+
+			<div class="l-main-left" style="width:100%">
+				<ul class="mp-Listings mp-Listings--gallery-view">
+					{% for item in listings %}
+						<li class="mp-Listing mp-Listing--gallery-item ">
+							<a href="{{route('listing', {'id' : item, 'slug' : str_slug(item.title)})}}">
+								<figure class="mp-Listing-image-container"><img title="{{item.title}}" src="{{item.photo()}}"></figure>
+								<div class="mp-Listing-content">
+									<div>
+										<h3 class="mp-Listing-title">{{item.title}}</h3>                                 
+										<span class="mp-Listing-price mp-text-price-label">&nbsp;{{ToUserCurrency(item.price,item.currency)}} {{auth_user().currency|upper}}</span>
+									</div>
+									<div>
+										<span class="mp-Listing-location">
+											<span class="mp-Icon mp-svg-website-grey"></span>{{item.shipped_from}}&#10230;{{item.countryNames()[:36]}}</span>
+										<span class="mp-Listing-date">
+                                        <span class="mp-Icon mp-svg-browse"></span>{{item.orders.count}} {{ __('messages.profile_store_sold') }}<br><span class="mp-Icon mp-svg-eye-open"></span>{{item.views_count}} {{ __('messages.profile_store_views') }}</span>
+										
+									</div>
+								</div>
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+                <div class="mp-PaginationControls">
+						{{listings.links | raw}}
+					</div>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}
+

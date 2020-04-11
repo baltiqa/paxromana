@@ -1,0 +1,63 @@
+{% extends "account.master" %}
+
+{% block css %}
+    <link href="{{ setting('url') }}/web/css/account_ads.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+    <section id="content">
+        <div id="msg-saved-seller" class="mp-Alert mp-Alert--success" style="background: white;color: black;">
+            <h1>{{ __('messages.profile_ref_link')}}: </h1>
+            <div style="margin-left: 20px;font-weight: bold;font-style: italic;border: 1px solid;padding: 5px;border-radius: 5px;background-color: silver;">
+                {{ url('/') }}/register/referrer/{{ user.id }}
+            </div>
+               &nbsp;<b>{{ __('messages.profile_earn')}}</b>
+        </div>
+        <div id="seller-panel">
+            <div class="canvas">
+                <div id="ad-listing-table" class="table ad-listing-container seller">
+                    <div id="table-head-stickies">
+                        <div id="ad-listing-header" class="table-head ad-listing compact">
+                            <div class="row">
+                                <div class="cells">
+                                    <div class="cell icon-column middle">
+                                    {{ __('messages.profile_commission')}}
+                                    </div>
+                                    <div class="cell views-column">
+                                        <span>BTC</span>
+                                    </div>
+                                    <div class="cell views-column">
+                                        <span>LTC</span>
+                                    </div>
+                                    <div class="cell views-column">
+                                        <span>XMR</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="scroll-under-top-border"></div>
+                    </div>
+                        <div id="ad-listing-table-body" class="table-body">
+                            <div class="row ad-listing compact">
+                                <div class="cells">
+                                    <div class="cell icon-column middle">
+                                    {{ __('messages.profile_paid_out')}}
+                                    </div>
+                                    <div class="cell icon-column middle">
+                                        <span>{{ refferals[0] }}</span>
+                                    </div>
+                                    <div class="cell icon-column middle">
+                                        <span>{{ refferals[1] }}</span>
+                                    </div>
+                                    <div class="cell icon-column middle">
+                                        <span>{{ refferals[2] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

@@ -1,0 +1,163 @@
+{% extends "account.master" %}
+
+{% block user_area %}
+   <section style="padding-bottom: 350px;" id="content">
+                    <h2>{{ __('messages.header_my_profile')}}</h2>
+
+                    <div class="profile canvas">
+                        <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">{{ __('messages.profile_block_1')}}</div>
+                                        <div class="profile-block-content">
+                                            {{ __('messages.profile_block_text_1')}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/edit_profile/me" class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.profile_tab5')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">{{ __('messages.profile_block_2')}}</div>
+                                        <div class="ellipsis profile-block-content">
+                                            {{ __('messages.profile_block_text_2')|raw}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/change_settings" class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.profile_edit')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">{{ __('messages.header_my_disputes')}}</div>
+                                        <div class="profile-block-content">
+                                         {{ __('messages.profile_block_text_3')}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/disputes" class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.header_my_disputes')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">{{ __('messages.tips_5')}}</div>
+                                        <div class="ellipsis profile-block-content">
+                                           {{ __('messages.profile_block_text_4')|raw}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/change_pgp" class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.profile_edit')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">Bitcoin Multisig 2/3</div>
+                                        <div class="ellipsis profile-block-content">
+                                           {{ __('messages.profile_block_text_5')}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/multisig" class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.profile_edit')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                      {% if auth_user().otp == 0 %}
+                        <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">{{ __('messages.profile_block_3')}}</div>
+                                        <div class="profile-block-content">
+                                            {{ __('messages.profile_block_text_6')}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/change_settings#2fa" class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.profile_block_3')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                         <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">{{ __('messages.profile_block_4')}}</div>
+                                        <div class="profile-block-content">
+                                            {{ __('messages.profile_block_text_7')}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/change_settings#2fa" class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.profile_block_4')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">{{ __('messages.header_my_orders')}}</div>
+                                        <div class="profile-block-content">
+                                        {{ __('messages.profile_block_text_8')}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/purchase-history " class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.profile_view')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">{{ __('messages.header_my_wallet')}}</div>
+                                        <div class="profile-block-content">
+                                         {{ __('messages.profile_block_text_9')}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/wallet" class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.profile_view')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-block">
+                            <div class="mp-Card mp-Card--rounded">
+                                <div class="mp-Card-block">
+                                    <div class="profile-content-wrapper">
+                                        <div class="ellipsis profile-block-title">{{ __('messages.header_my_tickets')}}</div>
+                                        <div class="profile-block-content">
+                                            {{ __('messages.profile_block_text_10')}}
+                                        </div>
+                                    </div>
+                                    <a href="/account/tickets" class="secondary sm mp-Button mp-Button--secondary mp-Button--sm">
+                                    <span>{{ __('messages.profile_view')}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+{% endblock %}

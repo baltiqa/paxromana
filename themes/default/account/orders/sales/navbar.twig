@@ -1,0 +1,20 @@
+		<div class="mp-Tab-bar">
+			<a href="/account/orders" class="mp-Tab {{ MetaTag.get('sub_id') == 11 ? 'is-selected' : ''}}">
+				{{ __('messages.account_sale_head1') }}({{processing}})
+			</a>
+			<a href="/account/orders/state/1"  class="mp-Tab {{ MetaTag.get('sub_id') == 12 ? 'is-selected' : ''}}">
+				{{ __('messages.account_sale_head2') }}({{accepted}})
+			</a>
+			<a href="/account/orders/state/2" class="mp-Tab {{ MetaTag.get('sub_id') == 13 ? 'is-selected' : ''}}">
+				{{ __('messages.account_sale_head3') }}({{shipped}})
+			</a>
+			<a href="/account/orders/state/3"  class="mp-Tab {{ MetaTag.get('sub_id') == 16 ? 'is-selected' : ''}}">
+				{{ __('messages.account_sale_head6') }}({{finalized}})
+			</a>
+			<a href="/account/orders/state/4"  class="mp-Tab {{ MetaTag.get('sub_id') == 15 ? 'is-selected' : ''}}">
+				{{ __('messages.account_sale_head4') }}({{disputed}})
+			</a>
+			<a href="/account/orders/state/5"  class="mp-Tab {{ MetaTag.get('sub_id') == 14 ? 'is-selected' : ''}}">
+				{{ __('messages.account_sale_head5') }}({{cancelled }}) 
+			</a>
+		</div>

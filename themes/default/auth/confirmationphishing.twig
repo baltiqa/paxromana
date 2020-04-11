@@ -1,0 +1,44 @@
+{% extends "layouts.frontpage" %}
+
+{% block css %}
+	<link href="{{ env('WEBSITE_URL') }}/web/css/index.css" rel="stylesheet">
+{% endblock %}
+{% block navbar %}
+	<header>
+		<div class="mp-Header-ribbonTop"></div>
+		<div class="mp-Header-ribbonBottom"></div>
+	</header>
+{% endblock %}
+{% block content %}
+	<div id="page-wrapper">
+		<div class="l-page pagelog">
+			<section class="l-main-right">
+				<a class="pagelogo" href="/" title="Pax Romana"></a>
+				{% include 'auth.flags.twig' %}
+				<div class="mp-Card mp-Card--rounded login">
+					<div class="mp-Card-block">
+						<div class="mp-Form mp-Form--aligned">
+							<h2 class="centerphishing">
+							{% if random == 1 %}Antoninus Pius{% endif %}{% if random == 2 %}Hadrianus{% endif %}{% if random == 3 %}Julius Caesar{% endif %}{% if random == 4 %}Marcus Aurelius{% endif %}{% if random == 5 %}Trajanus{% endif %}{% if random == 6 %}Alexander The Great{% endif %}
+							</h2>
+								<div class="form-squeeze">
+									<img class="centerphishing" src="/web/images/antiphishing/0{{random}}.png" width="600" title="Anti Phishing"/>
+									<h3 style="width: 100%;" class="centerphishing">
+									{{ __('messages.anti_phishing_part_1') }} {% if random == 1 %}Antoninus Pius{% endif %}{% if random == 2 %}Hadrianus{% endif %}{% if random == 3 %}Julius Caesar{% endif %}{% if random == 4 %}Marcus Aurelius{% endif %}{% if random == 5 %}Trajanus{% endif %} {{ __('messages.anti_phishing_part_2')|raw }}
+									</h3>
+									<div class="mp-Form-controlGroup">
+										<a href="/" class="mp-Button mp-Button--primary width-button">
+											<span>{{ __('messages.anti_phishing_submit') }}</span>
+										</a>
+										<div class="godlike godphishing">{{ __('messages.anti_phishing_why') }}?
+											<span class="godliketext right-phishing">{{ __('messages.anti_phishing_why_text') }}</span>
+										</div>
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}

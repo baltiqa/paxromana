@@ -1,0 +1,148 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/message.css" rel="stylesheet">
+	<style>
+		#page-wrapper {
+			margin-bottom: 0;
+		}
+
+	</style>
+
+{% endblock %}
+
+{% block content %}
+	<div class="wide-layout" id="page-wrapper">
+	
+		<div class="l-page indexpage" id="content" style="height: 800px;margin-bottom:150px;">
+			<div class="mp-Alert mp-Alert--error"><span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+					<li>
+						{{ __('messages.profile_antiphishing_warning')|raw }}
+					</li>
+		</div>
+		 {% if inboxes | length == 0 %}
+<div class="ContentPlaceholderMolecule-root pageHeaderOffsetBorder">
+<div class="ContentPlaceholderMolecule-rootInner">
+<div class="ContentPlaceholderMolecule-iconUnit">
+<span class="mp-Icon mp-Icon--xxl mp-svg-messages--secondary"></span>
+</div><p class="ContentPlaceholderMolecule-text"> {{ __('messages.inbox_nothing') }}</p>
+</div>
+</div>
+		 {% else  %}
+			<div class="inbox-messages chatheader">
+				<div class="messages-left">
+					<div class="mp-Card message-left-header">
+						<div class="mp-Card-block">
+							<h1>{{ __('messages.header_messages') }}</h1>
+						</div>
+					</div>
+					<div class="message-left-header-shadow">
+						<div class="ConversationsToolsMolecule-root"></div>
+					</div>
+					<div class="message-left-part">
+						<div>
+							<ol class="ConversationsOrganism-listRoot">
+               					 {% for k, inbox in inboxes %}
+								<li class="ConversationsOrganism-listItem">
+									<div class="ConversationMolecule-root ConversationMolecule-selling">
+										<label class="ConversationMolecule-selectLabel">
+										<input id="checkbox1" type="checkbox"></label>
+										<span class="ConversationMolecule-trashcan">
+											<span class="mp-Icon mp-Icon--md mp-svg-trash"></span>
+										</span>
+										<a href="{{  route('inbox.show', inbox.thread.conversation_id) }}#chat">
+											<div class="ConversationMolecule-leftUnit">
+												<div class="ConversationMolecule-thumbnailUnit">
+													<div class="ThumbnailAtom-root ThumbnailAtomSizes-lg ThumbnailAtomBorderRadii-xs" style="background-image: url(&quot;{{ inbox.withUser.getAvatar() }}&quot;);"></div>
+													<div class="ConversationMolecule-thumbnailProfilePictureUnit">
+														<span class="ProfilePictureAtom-root ProfilePictureAtomSizes-sm ProfilePictureAtom-rootBordered {{inbox.withUser.is_mod == 1 or inbox.withUser.is_headmod == 1 or inbox.withUser.is_admin == 1 ? 'staff' : ''}}">
+															<span>{{ inbox.withUser.username|first }}</span>
+														</span>
+													</div>
+												</div>
+											</div>
+											<div class="ConversationMolecule-rightUnit">
+												<h2 class="ConversationMolecule-title">{{ inbox.withUser.username }}</h2>
+												 {% if not inbox.thread.is_seen and inbox.thread.user_id != auth_user().id %}
+												<span class="ConversationMolecule-titleBadgeUnit">
+													<span class="BadgeAtom-root">1</span>
+												</span>
+												 {% endif %}
+												<div class="ConversationMolecule-body">
+													<div class="ConversationMolecule-meta">from {{ inbox.withUser.username }}</div>
+													<div class="ConversationMolecule-latestMessageWrapper">
+														<span>{{ inbox.thread.message  | filter_message | str_limit(18)}}</span>
+													<p class="card-left card-{{inbox.withUser.is_mod == 1 or inbox.withUser.is_headmod == 1 or inbox.withUser.is_admin == 1 ? 'staff' : 'user'}}">{{inbox.withUser.is_mod == 1 or inbox.withUser.is_headmod == 1 or inbox.withUser.is_admin == 1 ? 'Romana Staff' : inbox.withUser.trader_type == 'individual' ? 'Vendor' : 'Buyer'  }}</p>
+													</div>
+												</div>
+												<footer>
+													<div class="ConversationMolecule-receivedDateUnit">
+														<span>{{inbox.thread.created_at.diffForHumans()}}</span>
+													</div>
+												</footer>
+											</div>
+										</a>
+									</div>
+								</li>
+								{% endfor %}
+
+							</ol>
+						</div>
+					</div>
+				</div>
+				<a name="chat"></a>
+				<div class="chatindividual part2">
+					<div class="chatbox">
+						<header>
+							<div class="ConversationTopicOrganism-root">
+								<div class="ConversationTopicOrganism-titleUnit">
+									<div class="ConversationTopicOrganism-backLinkUnit">
+										
+									</div>
+									<h2 class="ConversationTopicOrganism-title">
+										<a href="/profile/Augustus">
+											<span class="ConversationTopicOrganism-profilePictureUnit">
+												<span class="ProfilePictureAtom-root ProfilePictureAtomSizes-md">
+													<span>S</span>
+												</span>
+											</span>
+											<span class="ConversationTopicOrganism-name">Augustus
+											<p class="card-blanc card-staff">Romana Staff</p>
+											</span>
+										</a>
+									</h2>
+								</div>
+								<div>
+								</div>
+							</div>
+						</header>
+						<article>
+							<div class="MessagesOrganism-root">
+								<div class="LegalDisclaimerMolecule-root">{{ __('messages.inbox_warning')|raw }}
+									<a target="_blank" href="/wiki/43" rel="noopener noreferrer">{{ __('messages.inbox_read_more') }}
+										<span class="mp-Icon mp-Icon--xs mp-svg-arrow-right--action"></span>
+									</a>
+								</div>
+								<div class="MessagesOrganism-group">
+									<ol class="MessagesOrganism-listRoot">
+										<li class="MessagesOrganism-listItem MessagesOrganism-listItem_from_otherparticipant">
+											<div>
+												<div class="MessageMolecule-root MessageMolecule-root_from_otherparticipant MessageMolecule-tail">
+														{{ __('messages.inbox_welcome')|raw }}
+												</div>
+											</div>
+										</li>
+									</ol>
+								</div>
+							</div>
+						</article>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+
+		</div>
+	</div>
+
+{% endblock %}
+

@@ -1,0 +1,71 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+<link href="{{ setting('url') }}/web/css/index.css" rel="stylesheet">
+{% endblock %}
+{% block navbar %}
+	<header>
+		<div class="mp-Header-ribbonTop"></div>
+		<div class="mp-Header-ribbonBottom"></div>
+	</header>
+{% endblock %}
+
+{% block content %}
+<div id="page-wrapper">
+    <div id="content" class="l-page">
+               <a class="pagelogo" href="/" title="Pax Romana"></a>
+               	{% include 'auth.flags.twig' %}
+        {% if errors.any()  %}
+        <div class="mp-Alert mp-Alert--error">
+            <span aria-hidden="true" class="mp-Alert-icon mp-svg-alert--inverse"></span>
+            <div>
+                <ul>
+                        <li>{{ __('messages.2fa_error') }}</li>
+                </ul>
+            </div>
+          </div>
+          {% endif %}
+        <div class="mp-Card mp-Card--rounded login">
+            <div class="mp-Card-block">
+                <div id="login-tabs" class="mp-Tab-bar mp-Tab-bar--center sdk-custom">
+                    <h3>{{ __('messages.2fa_title') }} </h3>
+                </div>
+            </div>
+            <div class="mp-Card-block">
+                <div class="mp-Form mp-Form--aligned">
+                    <div class="mp-Form-body sdk-custom">
+                        <form id="account-login-form" class="new-design-form" method="post"
+                            action="{{ route('2fa_factorcheck') }}">
+                            {{ csrf_field() }}
+
+                            <p>{{ __('messages.2fa_text') }}</p>
+
+                                <h4>{{ __('messages.2fa_pgptitle') }}</h4>
+                            <p>        
+     <pre style="word-wrap: break-word; white-space: pre-wrap; line-height: normal;">{{ app.session.get('suckmynuts') }}</pre>
+
+                            <div class="mp-Form-controlGroup">
+                                    <label class="mp-Form-controlGroup-label optional-label" for="code">{{ __('messages.2fa_code') }}</label>
+                                    <input type="text" name="code" placeholder="{{ __('messages.2fa_pgp_placeholder') }}" class="mp-Input {{ errors.has('code') ? ' invalid' : '' }}"  value="" tabindex="1">
+                            </div>
+
+                                <div class="mp-Form-controlGroup centered-control-group last-control-group">
+                                    <button id="account-login-button"
+                                        class="l-stretchable-auto mp-Button mp-Button--primary">
+                                        <span>{{ __('messages.anti_phishing_submit') }}</span>
+                                    </button>
+                                </div>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block footer %}
+
+{% endblock %}

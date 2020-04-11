@@ -1,0 +1,228 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+<link href="/web/css/own_profile_detail.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+	<div id="page-wrapper">
+		<div id="content" class="l-page">
+			{% include 'profile.head-profile.twig' %}
+			<div class="l-main-left">
+				<div class="mp-Card mp-Card--rounded">
+				   <div class="mp-Card-block">
+					{{ __('messages.profile_tab1') }}
+				   </div>
+					<div class="mp-Card-block">
+						<div class="dealer-description">
+							{{ profile.bio | convert_encoding('UTF-8', 'HTML-ENTITIES') | bbc2html | xss_clean | striptags('<b>,<i>,<u>,<ul>,<li>,<span>,<h1><h2><h3>') | raw | nl2br }}
+						</div>
+					</div>
+				</div>
+				<div style="margin-top:20px;" class="mp-Card mp-Card--rounded">
+				<div class="mp-Card-block">
+					{{ __('messages.profile_pgp_key_of') }} {{ profile.username }}
+				   </div>
+					<div class="mp-Card-block">
+						<div class="dealer-description">
+							<pre style="word-wrap: break-word; white-space: pre-wrap; line-height: normal;">{{profile.pgp_key}}</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+			<aside class="l-side-right">
+			{% if profile.trader_type == "individual" %}
+				<div class="contact-info mp-Card mp-Card--rounded">
+					<div class="mp-Card-block seller-info">
+						{{ __('messages.profile_own_vendorinfo') }}
+					</div>
+					<div class="mp-Card-block mp-Card-block">
+						<ul class="sales">
+							{% if profile.markets.count() != 0 %}
+							{% for markets in profile.markets %}
+								{% if markets.market_title == "Silk" %}
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Silk Road" src="/web/images/si.png"/> 
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.positive}}</i>/<i class="normal">{{ markets.neutral}}</i>/<i class="red">{{ markets.negatives}}</i>
+										</span>
+									</li>
+								{% elseif markets.market_title == "Berlus" %}
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Berlusconi Market" src="/web/images/ber.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.positive}}</i>/<i class="normal">{{ markets.neutral}}</i>/<i class="red">{{ markets.negatives}}</i>
+											</b>
+										</span>
+									</li>
+								{% elseif markets.market_title == "Dream" %}
+
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Dream Market" src="/web/images/d.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+													(<i class="normal">{{markets.rate}}<span class="mp-StarRating mp-StarRating--xs mp-StarRating--5">
+															<i class="smstar"></i>
+														</span>
+													</i>
+												</b>)</b>
+										</span>
+									</li>
+
+									{% elseif markets.market_title == "Samsara" %}
+
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="SamSara Market" src="/web/images/samsara.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.positive}}</i>/<i class="normal">{{ markets.neutral}}</i>/<i class="red">{{ markets.negatives}}</i>
+											</b>
+										</span>
+									</li>
+
+
+								{% elseif markets.market_title == "Empire" %}
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Empire Market" src="/web/images/eeim.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.positive}}</i>/<i class="normal">{{ markets.neutral}}</i>/<i class="red">{{ markets.negatives}}</i>
+											</b>
+										</span>
+									</li>
+
+								{% elseif markets.market_title == "Cryptonia" %}
+
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Cryptonia Market" src="/web/images/cd.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.percentage}}%</i>
+										</span>
+									</li>
+
+								{% elseif markets.market_title == "Nightmare" %}
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Nightmare Market" src="/web/images/nih.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.positive}}</i>/<i class="red">{{ markets.negatives}}</i>
+											</b>
+										</span>
+									</li>
+
+								{% elseif markets.market_title == "Apollon" %}
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Apollon Market" src="/web/images/apol.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.positive}}</i>/<i class="normal">{{ markets.neutral}}</i>/<i class="red">{{ markets.negatives}}</i>
+											</b>
+										</span>
+									</li>
+
+									{% elseif markets.market_title == "Tochka" %}
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Tochka Market" src="/web/images/tochka.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.positive}}</i>/<i class="normal">{{ markets.neutral}}</i>/<i class="red">{{ markets.negatives}}</i>
+											</b>
+										</span>
+									</li>
+
+									{% elseif markets.market_title == "Grey" %}
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Grey Market" src="/web/images/grey.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+													(<i class="normal">{{markets.rate}}<span class="mp-StarRating mp-StarRating--xs mp-StarRating--5">
+															<i class="smstar"></i>
+														</span>
+													</i>
+												</b>)</b>
+										</span>
+									</li>
+
+									{% elseif markets.market_title == "Dark" %}
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Dark Market" src="/web/images/darkm.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.positive}}</i>/<i class="normal">{{ markets.neutral}}</i>/<i class="red">{{ markets.negatives}}</i>
+											</b>
+										</span>
+									</li>
+
+									{% elseif markets.market_title == "Wallstreet" %}
+									<li>
+										<div class="mp-CompoundIcon mp-CompoundIcon--lg">
+											<img class="sizem" title="Wallstreet Market" src="/web/images/walls.png"/>
+										</div>
+										<span><b>{{ markets.sales}} {{ __('messages.profile_own_sales') }}</b> |
+												<i class="green">{{ markets.positive}}</i>/<i class="normal">{{ markets.neutral}}</i>/<i class="red">{{ markets.negatives}}</i>
+											</b>
+										</span>
+									</li>
+
+								{% endif %}
+							{% endfor %}
+							{% else %}
+							<p>{{ __('messages.profile_own_sales_nothing') }}</p>
+							{% endif %}
+						</ul>
+					</div>
+				</div>
+				{% endif %}
+
+
+				<div class="contact-info mp-Card mp-Card--rounded">
+					<div class="mp-Card-block seller-info">
+						{{ __('messages.profile_gen_info') }}
+					</div>
+					<div class="mp-Card-block mp-Card-block">
+						<ul>
+						 {% if profile.trader_type == "individual" %}
+							<li>
+								<span>{{ __('messages.profile_disputes') }}:<b>{{ __('messages.profile_won') }}:<i class="green">{{profile.countDisputeWin()}}</i>/{{ __('messages.profile_lost') }}:<i class="red">{{profile.countDisputeLoss()}}</i>
+									</b>
+								</span>
+							</li>
+							<li>
+								<span>Sold:<b><i>{{profile.orders.count}}</i>
+									</b>
+								</span>
+							</li>
+						{% else %}
+						<li>
+								<span>{{ __('messages.profile_disputes') }}:<b>{{ __('messages.profile_won') }}:<i class="green">{{profile.countBuyerDisputeWin()}}</i>/{{ __('messages.profile_lost') }}:<i class="red">{{profile.countBuyerDisputeLoss()}}</i>
+									</b>
+								</span>
+							</li>
+						{% endif %}
+							<li>
+								<span>{{ __('messages.profile_orders_placed') }}:<b><i>{{profile.normal_orders.count}}</i>
+									</b>
+								</span>
+							</li>					
+						</ul>
+					</div>
+				</div>
+			</aside>
+		</div>
+	</div>
+{% endblock %}
+

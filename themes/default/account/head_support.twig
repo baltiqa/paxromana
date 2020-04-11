@@ -1,0 +1,15 @@
+	 <div class="mp-Topbar">
+                <section class="mp-Topbar-inner-wrapper">
+                    <div class="mp-Tab-bar ">
+                       <a href="/account/tickets" class="mp-Tab {{ MetaTag.get('support_id') == 1 ? 'is-selected' : ''}} ">
+                        {{ __('messages.account_head_support_1') }}
+                        </a>
+                        <a href="/account/create/ticket" class="mp-Tab {{ MetaTag.get('support_id') == 2 ? 'is-selected' : ''}} ">
+                        {{ __('messages.account_head_support_2') }}
+                        </a>
+                        <a href="/account/reports" class="mp-Tab {{ MetaTag.get('support_id') == 3 ? 'is-selected' : ''}} ">
+                        {{ __('messages.account_head_support_3') }}
+                        </a>
+                    </div>
+                </section>
+        </div>

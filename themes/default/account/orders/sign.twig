@@ -1,0 +1,82 @@
+{% extends "account.master" %}
+{% block css %}
+{% endblock %}
+
+{% block user_area %}
+    <div id="content">
+
+        {% if app.session.get('success') %}
+            <div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+                <span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+                <div>
+                    {{ app.session.get('success') }}
+                    {{ app.session.flash('success') }}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if app.session.get('error') %}
+            <div class="mp-Alert mp-Alert--error">
+                <span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+                <div>
+                    {{ app.session.get('error') }}
+                    {{ app.session.flash('error') }}
+                </div>
+            </div>
+        {% endif %}
+
+	
+	<div class="mp-Alert " style="background-color:#blue;">
+							<span class="mp-Alert-icon mp-svg-info"></span>
+							<div>
+								<li style="color:black;">
+					{{__('messages.sign_warning_text')|raw}}
+								</li>
+							</div>
+			</div>
+
+        <div style="margin-bottom: 50%;" class="mp-Card mp-Card--rounded">
+            <div class="mp-Card-block">
+                <form method="post">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="order_id" value="{{ order_id }}">
+                        <div class="form-field">
+                            <h3 class="heading heading-3">
+                                <b>{{__('messages.sign_titlee')}}</b>
+                            </h3>
+                            <span class="help-block">{{__('messages.sign_titlee_b')}}</span>
+                            <textarea style="height:350px;" class="mp-Textarea" id="hex" name="hex">{{hex}}</textarea>
+                        </div>
+                        <div class="form-field">
+                            <h3 class="heading heading-3">
+                                <b>{{__('messages.sign_private_key')}}</b>
+                            </h3>
+                            <span class="help-block">{{__('messages.sign_private_key_b')}}</span>
+                            <input type="text"  placeholder="{{__('messages.sign_placeholder')}}" name="private_key" id="private_key" class="mp-Input {{ errors.has('private_key') ? ' invalid' : '' }}" value="">
+                            {% if errors.has('private_key') %}
+                                <div class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+                                    {{__('validation.pgp_key_wrong')}}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mp-Form-controlGroup">
+                            <img src="/captcha.html"/>
+                            <input id="captcha" type="text" placeholder="{{__('messages.login_captcha_text')}}" name="captcha" class="mp-Input {{ errors.has('captcha') ? ' invalid' : '' }}" tabindex="2">
+                            {% if errors.has('captcha') %}
+                                <div class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+                                    {{ errors.first('captcha') }}
+                                </div>
+                            {% endif %}
+                        </div>
+						<br>
+                        <div class="form-field">
+                            <button id="confirm-profile" class="primary medium mp-Button mp-Button--primary">
+                                <span>{{__('messages.sign_buttonb')}}</span>
+                            </button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

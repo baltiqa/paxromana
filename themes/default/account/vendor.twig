@@ -1,0 +1,79 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_wallet.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+	<div id="page-wrapper">
+		<div id="content" class="l-page">
+			<h1 class="page-header">{{ __('messages.profile_apply_vendor_title')}}</h1>
+			<div class="mp-Card mp-Card--rounded">
+				<div class="mp-Card-block">
+					{% if app.session.get('error') %}
+						<div class="mp-Alert mp-Alert--error">
+							<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+							<div>
+								{{ app.session.get('error')  | raw}}
+							</div>
+						</div>
+					{% endif %}
+					<div class="content">
+						<p>
+							<strong>{{ __('messages.profile_apply_vendor_agree')}}</strong>
+						</p>
+						<ul>
+							<li>{{ __('messages.profile_apply_vendor_rule_1')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rule_2')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rule_3')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rule_4')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rule_5')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rule_6')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rule_7')|raw }}</li>
+						</ul>
+						<p style="color:red;">{{ __('messages.profile_apply_vendor_terminations')}}</p>
+						<p>
+							<strong>{{ __('messages.profile_apply_vendor_other_req')}}</strong>
+						</p>
+						<ul>
+							<li>{{ __('messages.profile_apply_vendor_rules8')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rules9')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rules10')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rules11')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rules12')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rules13')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_rules14')}}</li>
+						</ul>
+						<p>
+							<strong>{{ __('messages.profile_apply_vendor_other_requirements')}}</strong>
+						</p>
+						<ul>
+							<li>{{ __('messages.profile_apply_vendor_other_req1')|raw}}</li>
+							<li>{{ __('messages.profile_apply_vendor_other_req2')}}</li>
+							<li>{{ __('messages.profile_apply_vendor_other_req3')}}</li>
+						</ul>
+						<p>*) {{ __('messages.profile_apply_vendor_refund')}}</p>
+						<hr>
+						<form action="{{route('account.pay.vendor')}}" method="post">
+						{{ csrf_field() }}
+
+						<input type="checkbox" name="terms">{{ __('messages.profile_apply_vendor_confirm')}}
+ 								 {% if errors.has('terms') %}
+                                            <div
+                                                class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+                                                {{ __('messages.profile_apply_vendor_accept')}}
+                                            </div>
+                                            {% endif %}
+						<div class="form-field">
+							<input class="mp-Button mp-Button--secondary mp-Button--lg" value="Pay with BTC {{ GetBTCPrice(150,"USD","yes") }}" type="submit" name="paybtc">
+							<input class="mp-Button mp-Button--secondary mp-Button--lg" value="Pay with LTC {{ GetLTCPrice(150,"USD","yes") }}" type="submit" name="payltc">
+							<input class="mp-Button mp-Button--secondary mp-Button--lg" value="Pay with XMR {{ GetXMRPrice(150,"USD","yes") }}" type="submit" name="payxmr">
+						</div>
+						<form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}
+

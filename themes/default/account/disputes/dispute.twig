@@ -1,0 +1,157 @@
+{% extends "account.master" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/message.css" rel="stylesheet">
+	<style>
+		#page-wrapper {
+			margin-bottom: 0;
+		}
+	</style>
+{% endblock %}
+{% block user_area %}
+	<div class="wide-layout" id="page-wrapper">
+		{% if auth_user().trader_type == 'individual' %}
+        	{% include 'account.head_vendor_bar.twig' %}
+        {% endif %}
+		<div class="l-page indexpage" id="content" style="height: 800px;margin-bottom:150px;">
+			<div style="top: 10px;" class="inbox-messages chatheader">
+				<div class="messages-left">
+					<div class="mp-Card message-left-header">
+						<div class="mp-Card-block">
+							<h1>{{ __('messages.header_my_disputes') }}</h1>
+						</div>
+					</div>
+					<div class="message-left-header-shadow">
+						<div class="ConversationsToolsMolecule-root"></div>
+					</div>
+					<div class="message-left-part">
+						<div>
+							<ol class="ConversationsOrganism-listRoot">
+								{% if auth_user().trader_type == "buyer" %}
+									{% for dispute in auth_user().disputesBuyer  %}
+										<li class="ConversationsOrganism-listItem">
+											<div class="ConversationMolecule-root ConversationMolecule-selling">
+												<a href="{{route('account.dispute.show',dispute.id)}}#chat">
+													<div class="ConversationMolecule-leftUnit">
+														<div class="ConversationMolecule-thumbnailUnit">
+															<div class="ThumbnailAtom-root ThumbnailAtomSizes-lg ThumbnailAtomBorderRadii-xs" style="background-image: url({{dispute.seller.avatar}});"></div>
+															<div class="ConversationMolecule-thumbnailProfilePictureUnit">
+																<span class="ProfilePictureAtom-root ProfilePictureAtomSizes-sm ProfilePictureAtom-rootBordered">
+																	<span>{{dispute.seller.username|first}}</span>
+																</span>
+															</div>
+														</div>
+													</div>
+													<div class="ConversationMolecule-rightUnit">
+														<h2 class="ConversationMolecule-title">{{ __('messages.account_dispute') }} #{{dispute.id}}</h2>
+														<div class="ConversationMolecule-body">
+															<div class="ConversationMolecule-meta">{{ __('messages.profile_seller') }} {{dispute.seller.username}}</div>
+															<div class="ConversationMolecule-latestMessageWrapper">
+																<span>{{dispute.replies.last.message | str_limit(18)}}</span>
+															</div>
+														</div>
+														<footer>
+															<div class="ConversationMolecule-receivedDateUnit">
+																<span>{{ __('messages.order_item5') }}: {{dispute.resolved == 0 ?  "Unsolved" : dispute.winner == auth_user().id ? __('messages.profile_won') : __('messages.profile_lost')}}</span>
+															</div>
+														</footer>
+													</div>
+												</a>
+											</div>
+										</li>
+									{% endfor %}
+								{% else %}
+									{% for dispute in auth_user().disputesSeller  %}
+											<li class="ConversationsOrganism-listItem">
+												<div class="ConversationMolecule-root ConversationMolecule-selling">
+												<a href="{{route('account.dispute.show',dispute.id)}}#chat">
+													<div class="ConversationMolecule-leftUnit">
+														<div class="ConversationMolecule-thumbnailUnit">
+															<div class="ThumbnailAtom-root ThumbnailAtomSizes-lg ThumbnailAtomBorderRadii-xs" style="background-image: url({{dispute.buyer.avatar}});"></div>
+															<div class="ConversationMolecule-thumbnailProfilePictureUnit">
+																<span class="ProfilePictureAtom-root ProfilePictureAtomSizes-sm ProfilePictureAtom-rootBordered">
+																	<span>{{dispute.buyer.username|first}}</span>
+																</span>
+															</div>
+														</div>
+													</div>
+													<div class="ConversationMolecule-rightUnit">
+														<h2 class="ConversationMolecule-title">{{ __('messages.account_dispute') }} #{{dispute.id}}</h2>
+														<div class="ConversationMolecule-body">
+															<div class="ConversationMolecule-meta">{{ __('messages.profile_buyer') }} {{dispute.buyer.username}}</div>
+															<div class="ConversationMolecule-latestMessageWrapper">
+																<span>{{dispute.replies.last.message | str_limit(18)}}</span>
+															</div>
+														</div>
+														<footer>
+															<div class="ConversationMolecule-receivedDateUnit">
+																<span>{{ __('messages.order_item5') }}: {{dispute.resolved == 0 ?  "Unsolved" : dispute.winner == auth_user().id ? __('messages.profile_won') : __('messages.profile_lost')}}</span>
+															</div>
+														</footer>
+													</div>
+												</a>
+												</div>
+											</li>
+									{% endfor %}
+								{% endif %}
+							</ol>
+						</div>
+					</div>
+				</div>
+				<a name="chat"></a>
+				<div class="chatindividual part2">
+					<div class="chatbox">
+						<header>
+							<div class="ConversationTopicOrganism-root">
+								<div class="ConversationTopicOrganism-titleUnit">
+									<div class="ConversationTopicOrganism-backLinkUnit">
+										
+									</div>
+									<h2 class="ConversationTopicOrganism-title">
+										<a href="/profile">
+											<span class="ConversationTopicOrganism-profilePictureUnit">
+												<span class="ProfilePictureAtom-root ProfilePictureAtomSizes-md">
+													<span>S</span>
+												</span>
+											</span>
+											<span class="ConversationTopicOrganism-name">{{ __('messages.account_dispute_board') }}</span>
+										</a>
+									</h2>
+								</div>
+								<div></div>
+							</div>
+						</header>
+						<article>
+							<div class="MessagesOrganism-root">
+								<div class="MessagesOrganism-group">
+								<ol class="MessagesOrganism-listRoot">
+										<li class="MessagesOrganism-listItem MessagesOrganism-listItem_from_otherparticipant">
+											<div>
+												<div class="MessageMolecule-root MessageMolecule-root_from_otherparticipant MessageMolecule-tail">
+													{{ __('messages.account_dispute_title') }}<br><br><ul>
+														<li>{{ __('messages.account_dispute_text_1') }}</li>
+														<li><br>{{ __('messages.account_dispute_text_2')|raw }}</li>
+														<li>{{ __('messages.account_dispute_text_3')|raw }}</li>
+														<br>
+														<li>{{ __('messages.account_dispute_text_4') }}</li>
+														<br>
+														<li>{{ __('messages.account_dispute_text_5')|raw }}</li>
+													</u>
+													<div class="MessageMolecule-meta MessageMolecule-sender">
+														<span style="color:red;font-weight:bold;">{{ __('messages.account_moderator') }}</span>
+													</div>
+												</div>
+											</div>
+										</li>
+									</ol>
+								</div>
+							</div>
+						</article>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+

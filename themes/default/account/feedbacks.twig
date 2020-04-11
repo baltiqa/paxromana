@@ -1,0 +1,41 @@
+{% extends "account.master" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_favourite.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+		{% include 'account.head_vendor_bar.twig' %}
+	{% if auth_user().comments.count != null %}
+		<section class="FavoriteSellersContainer-favorite_sellers_container">
+			<div class="list-container">
+				<div class="mp-Card mp-Card--rounded">
+					{% for comment in auth_user().comments %}
+						<article class="user-review mp-Card-block">
+							<header class="user-review-header">
+								{{comment.created_at.diffForHumans(null,true, true)}}
+								<span class="mp-StarRating mp-StarRating--5 ">
+									{{ include('components.star_rating', {rating: comment.rating}) }}
+								</span>{{comment.comment[:25]}}  
+								<span style="float:right;" class="mp-text-meta"><a href="/profile/{{auth_user().username}}">{{auth_user().username}}</a>  {{comment.order.price}}{{comment.order.currency}} {% if comment.commenter.trusted() %} (<i style="color:#00CF72;font-weight:bold;">{{ __('messages.profile_trusted_buyer')}}</i> <img title="verified" width="16" src="/web/images/check2.png">) {% else %} (<i style="color:red;font-weight:bold;">{{ __('messages.profile_new_buyer')}}</i>) {% endif %}</span>
+							</header>
+						</article>
+					{% endfor %}
+				</div>
+			</div>
+		</section>
+	{% else %}
+		<section class="FavoritesContainer-favorites_container">
+			<div class="FavoritesList-list-container"></div>
+			<div class="mp-Alert mp-Alert--info-light">
+				<span class="mp-Alert-icon mp-svg-info"></span>
+				<div>
+					<span>
+						{{ __('messages.account_no_feedback')}}
+					</span>
+				</div>
+			</div>
+		</section>
+	{% endif %}
+{% endblock %}
+

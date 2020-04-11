@@ -1,0 +1,39 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+<style>
+@media (min-width: 46.875em) {
+body .l-page .page-404-error-text {
+    margin: 50px 70px;
+}
+
+}
+
+
+body .l-page .page-404-error-text {
+    font-size: 1.5em;
+    line-height: 1.2em;
+    margin: 30px;
+    font-weight: 700;
+    text-align: center;
+    color: #2d3c4d;
+}
+#page-wrapper {
+    min-height: 100%;
+    /* margin-bottom: -226px; */
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div id="page-wrapper">
+            <div id="content" class="l-page">
+                    <div class="page-404-error-text">
+                        <b>{{ __('messages.error') }} ID #{{ app.session.get('error_code') }} {{ __('validation.error_code_contact') }}</b><br><br>
+                        <img class="centerphishing" src="/web/images/antiphishing/06.png" width="500" title="Alexander The Great"/>
+                    </div>
+            </div>
+ </div>
+	{% endblock %}

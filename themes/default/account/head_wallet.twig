@@ -1,0 +1,15 @@
+	 <div class="mp-Topbar">
+                <section class="mp-Topbar-inner-wrapper">
+                    <div class="mp-Tab-bar ">
+                       <a href="/account/wallet/btc" class="mp-Tab {{ MetaTag.get('wallet_id') == 1 ? 'is-selected' : ''}} ">
+                        Bitcoin {{ __('messages.wallet_title') }}
+                        </a>
+                        <a href="/account/wallet/ltc" class="mp-Tab {{ MetaTag.get('wallet_id') == 2 ? 'is-selected' : ''}} ">
+                        Litecoin {{ __('messages.wallet_title') }}
+                        </a>
+                        <a href="/account/wallet/xmr" class="mp-Tab {{ MetaTag.get('wallet_id') == 3 ? 'is-selected' : ''}} ">
+                        Monero {{ __('messages.wallet_title') }}
+                        </a>
+                    </div>
+                </section>
+        </div>

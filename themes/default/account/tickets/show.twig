@@ -1,0 +1,148 @@
+{% extends "account.master" %}
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_support.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+	<div id="content">
+		{% include 'account.head_support.twig' %}
+		<div class="mp-Card mp-Card--rounded">
+			<div class="mp-Card-block">
+				{% if app.session.get('error') %}
+					<div class="mp-Alert mp-Alert--error">
+						<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+						<div>
+							{{ app.session.get('error') }}
+						</div>
+					</div>
+				{% endif %}
+				{% if app.session.get('message') %}
+					<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+						<span class="mp-Alert-icon   mp-svg-checkmark-circled-white"></span>
+						<div>
+							{{ app.session.get('message') }}
+						</div>
+					</div>
+				{% endif %}
+
+				<div class="edit-profile-block clear-fix">
+					<div class="form-field">
+						<p style="text-align:right;"><b>{{ __('messages.listing_categories')}}:</b>
+							{{ticket.category}}
+							<b>{{ __('messages.account_date')}}:</b>
+							{{ticket.created_at |date('d-m-Y H:i:s')}}
+							<b>{{ __('messages.order_item5')}}:</b>
+							<span class="{{ticket.status == "Answered" ? 'answered' : ticket.status == "Unanswered" ? 'unanswered' : 'closed'}}">{{ticket.status}}</span>
+						</p>
+						<h3 class="heading heading-3">
+							<b>{{ __('messages.account_ticket_fge')}} #{{ticket.id}}
+								-
+								{{ticket.title}}</b>
+						</h3>
+					{% if ticket.status != "Closed" %}
+						<a href="{{route('account.ticket.close',ticket.id)}}" class="button mp-Button mp-Button--primary mp-Button--xs fav-btn">
+							{{ __('messages.account_close_ticket')}}
+						</a>
+					{% endif %}
+					</div>
+
+					<div class="form-field">
+						<h3 class="heading heading-3">
+							<b>{{ __('messages.account_ticket_question')}}</b>
+						</h3>
+						<textarea style="background-color:#EEEEEE;height:150px;" class="mp-Textarea" id="text" name="text" disabled>{{ticket.text}}</textarea>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+		<div style="margin-top:20px;" class="mp-Card mp-Card--rounded">
+			<div class="mp-Card-block">
+				<div class="form-field">
+					<h3 class="heading heading-3">
+						<b>{{ __('messages.account_ticket_conversation')}}</b>
+					</h3>
+				</div>
+				{% if ticket.replies.count != null %}
+					{% for reply in ticket.replies %}
+						{% if reply.adminreply != 0  %}
+							<div class="panel-danger">
+								<div class="panel panel-heading">
+									 {{reply.moderator.username}}
+								</div>
+								<div class="panel panel-body">
+									<pre>{{reply.text}}</pre>
+									<span style="font-size: 15px;">
+										<b>{{reply.created_at |date('d-m-Y H:i:s')}}</b>
+									</span>
+								</div>
+							</div>
+							<hr>
+						{% endif %}
+						{% if reply.adminreply == 0  %}
+							<div class="panel-primary">
+								<div class="panel panel-heading">
+									{{reply.user.username}}
+								</div>
+								<div class="panel panel-body">
+									<pre>{{reply.text}}</pre>
+									<span style="font-size: 15px;">
+										<b>{{reply.created_at |date('d-m-Y H:i:s')}}</b>
+									</span>
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
+
+				{% else %}
+					<p>{{ __('messages.account_ticket_no_answer')}}</p>
+				{% endif %}
+			</div>
+		</div>
+
+		<div style="margin-top:20px;" class="mp-Card mp-Card--rounded">
+			<div class="mp-Card-block">
+				<h3 class="heading heading-3">
+					<b>{{ __('messages.account_ticket_question')}}</b>
+				</h3>
+				{% if ticket.status != "Closed" %}
+					<form method="post" action="{{route('account.post.reply',ticket.id)}}">
+						{{ csrf_field() }}
+						<div class="form-field">
+							<h3 class="heading heading-3">
+								<b>{{ __('messages.account_ticket_message')}}</b>
+							</h3>
+							<span class="help-block">{{ __('messages.account_ticket_message_s')}}
+							</span>
+							<textarea style="height:150px;" class="mp-Textarea {{ errors.has('text') ? ' invalid' : '' }} " id="text" name="text">{{ old('text') }}</textarea>
+						</div>
+
+						<div class="form-field">
+							<h3 class="heading heading-3">
+								<b>Captcha</b>
+							</h3>
+							<img style="margin:5px;" src="/captcha.html">
+							<input type="text" name="captcha" id="captcha" class="mp-Input {{ errors.has('captcha') ? ' invalid' : '' }} " value="">
+						</div>
+
+						<div style="margin-top:5px;" class="form-field">
+							<button type="submit" class="primary medium mp-Button mp-Button--primary">
+								<span>{{ __('messages.profile_submit')}}</span>
+							</button>
+							<a id="cancel-profile" href="/account/tickets" class="secondary medium mp-Button mp-Button--secondary">
+								<span>{{ __('messages.profile_cancel')}}</span>
+							</a>
+						</div>
+					</form>
+				{% else %}
+					<p>{{ __('messages.account_close_ticket_text')}}</p>
+				{% endif %}
+
+			</div>
+		</div>
+
+	</div>
+{% endblock %}
+

@@ -1,0 +1,144 @@
+{% extends "account.master" %}
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_ads.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+
+	<div id="content">
+		<div id="seller-panel">
+			<div style="background-color:white;" class="canvas">
+				{% if orders.count == null %}
+					{% include 'account.head_vendor_bar.twig' %}
+					<div id="table-head-stickies" class="sticky">
+						<div id="ad-listing-header" class="table-head ad-listing compact">
+							<div class="row">
+								<div class="cell select-column">
+									{% include 'account.orders.sales.navbar.twig' %}
+								</div>
+							</div>
+						</div>
+						<div id="scroll-under-top-border"></div>
+					</div>
+					<div style="margin:0;" class="mp-Alert mp-Alert--info-light">
+						<span class="mp-Alert-icon mp-svg-info"></span>
+						<div>
+							<span>
+								{{ __('messages.account_no_sales') }}
+							</span>
+						</div>
+					</div>
+
+				{% else %}
+						<form method="get" action="{{ env('WEBSITE_URL') }}/account/orders/state/{{ MetaTag.get('state') }}">
+						<input class="mp-Input style-scope listing-search" placeholder="{{ __('messages.account_sale_search') }}" name="q" type="text" value="{{app.request.query('q')}}">
+						<button class="mp-Button mp-Button--secondary mp-Button--xs mp-SearchForm-search style-scope mp-Header" type="submit">
+							<span class="mp-Icon mp-svg-search style-scope mp-Header"></span>
+							<span class="mp-show-md style-scope mp-Header"></span>
+						</button>
+					</form>
+					{% include 'account.head_vendor_bar.twig' %}
+					<div id="ad-listing-table" class="table ad-listing-container seller">
+						<div id="table-head-stickies" class="sticky">
+							<div id="ad-listing-header" class="table-head ad-listing compact">
+								<div class="row">
+									<div class="cell select-column">
+										{% include 'account.orders.sales.navbar.twig' %}
+									</div>
+								</div>
+							</div>
+							<div id="scroll-under-top-border"></div>
+						</div>
+						{% for i, item in orders %}
+							<div id="ad-listing-table-body" class="table-body">
+								<div class="row ad-listing compact">
+									<div class="cells">
+										<div class="cell icon-column">
+											<div class="check">
+												<label>
+													<b>{{ __('messages.account_order') }} ID:
+													</b>
+													{{item.id}}</label>
+											</div>
+										</div>
+										<div class="cell thumbnail-column">
+											<div class="thumbnail-wrapper">
+												<a href="{{ item.url }}">
+													<img src="{{item.listing.getPhoto() == null ? '/web/images/noimage.png' : item.listing.getPhoto() }}">
+												</a>
+											</div>
+										</div>
+										<div class="cell">
+											<textarea class="form-control" rows="10" cols="30" style="resize: vertical;" readonly="" value="">{{item.shipping_address}}</textarea>
+										</div>
+
+										<div class="cell description-column">
+											<a class="title" href="{{ route('account.orders.show', item) }}">
+												<span>{{ item.product_title }}</span>
+											</a>
+											<div class="item">
+												<label>{{ __('messages.order_item') }}</label>
+												#{{ item.hash }}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.listing_product_class') }}</label>
+												<b>{{ item.is_digital == 1 ? __('messages.listing_product_class_2') : __('messages.listing_product_class_1')}}</b>
+											</div>
+											<div class="item">
+												<label>{{ __('messages.profile_buyer') }}</label><br><a href="/profile/{{ item.user.username }}">{{ item.user.username }}</a>
+											</div>
+											<div class="item">
+												<label>{{ __('messages.account_sale_shipping_method') }}</label><br>{{ item.shipping.name  }}/{{ item.shipping.days  }}{{ __('messages.account_listings_days') }}/
+												{% if item.currency == "BTC" %}
+													{{ item.shipping_fee }}BTC
+												{% elseif item.currency == "LTC" %}
+													{{ item.shipping_fee }}LTC
+												{% elseif item.currency == "XMR" %}
+													{{ item.shipping_fee }}XMR
+												{% endif %}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.account_purschased') }}:</label><br>{{ item.created_at.toFormattedDateString }}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.listing_quantity') }}:</label><br><b>{{ item.amount }}
+													{{ __('messages.order_item') }}</b>
+											</div>
+										</div>
+										<div class="cell position-column features-column">
+											<div class="item">
+												<button class="mp-Button mp-Button--green mp-Button--xs" disabled>{{ __('messages.account_order_status3') }} </button><br>
+												<label>{{ __('messages.order_item2') }}:</label><br>
+												<span class="{{ item.currency == 'BTC' ? 'btc20' : item.currency == 'XMR' ? 'xmr20' : 'ltc20' }}"></span>
+												{{item.payment_type.payment_name}}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.order_item3') }}:</label><br>
+												{{ item.price  }}
+												{{item.currency}}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.wallet_table_3') }}</label><br>
+												<span style="{{order.status == "processing" ? "color:black": item.status == "shipped" ? "color:blue" : item.status == "cancelled" ? "color:red;" : item.status == "disputed" ? "color:red;" : "color:green;" }}">{{item.status}}</span>
+											</div>
+
+											<div class="cta">
+												<a href="{{ route('account.orders.show', item) }}" class="mp-Button--xs mp-Button--primary">
+													{{ __('messages.account_sale_details') }}
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+						{{orders.links() | raw }}
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}
+

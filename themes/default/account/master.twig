@@ -1,0 +1,51 @@
+{% extends "layouts.app" %}
+{% block css %}
+<link href="{{ setting('url') }}/web/css/account_profile.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div id="page-wrapper" class="mymp require">
+            <div class="mp-Topbar">
+                <section class="mp-Topbar-inner-wrapper">
+                    <div class="mp-Topbar-title">
+                        {{ __('messages.header_account')}}
+                    </div>                   
+                    <div class="mp-Tab-bar has-sticky">
+                        <a href="/account/edit_profile" class="mp-Tab {{ MetaTag.get('id') == 1 ? 'is-selected' : ''}}">
+                        {{ __('messages.header_my_account')}} 
+                        </a>
+				    	{% if auth_user().trader_type == 'individual' %}
+                        <a href="/account/vendor_settings" class="mp-Tab {{ MetaTag.get('id') == 2 ? 'is-selected' : ''}} ">
+                        {{ __('messages.header_v_panel')}} 
+                        </a>
+                        {% endif %}
+                        <a href="/account/purchase-history" class="mp-Tab {{ MetaTag.get('id') == 6 ? 'is-selected' : ''}} ">
+                        {{ __('messages.header_my_orders')}} 
+                        </a>
+                        {% if auth_user().trader_type == 'buyer' %}
+                        <a href="/account/disputes#chat" class="mp-Tab {{ MetaTag.get('id') == 15 ? 'is-selected' : ''}} ">
+                        {{ __('messages.header_my_disputes')}} 
+                        </a>
+                        {% endif %}
+                         <a href="/account/favorites" class="mp-Tab {{ MetaTag.get('id') == 3 ? 'is-selected' : ''}} ">
+                        {{ __('messages.header_my_favorites')}} 
+                        </a>
+                         <a href="/account/referrals" class="mp-Tab {{ MetaTag.get('id') == 21 ? 'is-selected' : ''}} ">
+                        {{ __('messages.header_my_reff')}} 
+                        </a>
+                        <a href="/account/wallet" class="mp-Tab {{ MetaTag.get('id') == 4 ? 'is-selected' : ''}} ">
+                        {{ __('messages.header_my_wallet')}}
+                        </a>
+                        <a href="/account/tickets" class="mp-Tab {{ MetaTag.get('id') == 23 ? 'is-selected' : ''}} ">
+                        {{ __('messages.header_my_tickets')}}
+                        </a>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="l-page">
+                 {% block user_area %}{% endblock %}
+            </div>
+        </div>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "account.master" %}
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_support.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+	<div id="content">
+		{% include 'account.head_support.twig' %}
+		<div style="margin-bottom: 50%;" class="mp-Card mp-Card--rounded">
+			<div class="mp-Card-block">
+            	{% if app.session.get('message') %}
+						<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+							<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+							<div>
+								{{ app.session.get('message') }}
+							</div>
+						</div>
+					{% endif %}
+            <div class="headcreate">
+             <p>{{ __('messages.account_ticket_title_text')}}</p>
+            </div>
+            <h2>{{ __('messages.account_ticket_report_list')}}({{reports.count}})</h2>
+				<div class="head-table">
+					<table style="width:100%;background-color:#FFFFFF;">
+						<thead>
+							<tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">{{ __('messages.account_ticket_table_1')}}</th>
+                                <th scope="col">{{ __('messages.profile_reason')}}</th >
+                                <th scope="col">{{ __('messages.profile_notes')}}</th>
+                                <th scope="col">{{ __('messages.account_reported_user')}}</th>
+                                <th scope="col">{{ __('messages.order_item5')}}</th>
+                                <th scope="col">{{ __('messages.browse_news')}}</th>
+                                <th scope="col">{{ __('messages.account_listings_action')}}</th>
+                            </tr>
+						</thead>
+                        <tbody>
+                        {% if reports.count != null  %}
+                        {% for report in reports %}
+                        <tr>
+                        <td>{{report.id}}</td>
+                        <td>{{report.created_at}}</td>
+                        <td>{{report.reason[:10] ~ '...'}}</td>
+                        <td>{{report.notes[:15] ~ '...'}}</td>
+                        <td>{{report.reportedUser.username}}</td>
+                        <td class="{{report.active == "1" ? 'unanswered' : 'answered'}}">{{report.active == 1 ? __('messages.account_unsolved') : __('messages.account_solved') }}</td>
+                        <td>{{report.updated_at.diffForHumans() }}</td>
+                        <td><a href="/account/report/{{report.id}}">{{ __('messages.account_date')}}</a></td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <td>{{ __('messages.account_ticket_none')}}</td>
+                        {% endif %}
+
+                        </tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+

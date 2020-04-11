@@ -1,0 +1,73 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+<link href="{{ setting('url') }}/web/css/index.css" rel="stylesheet">
+{% endblock %}
+{% block navbar %}
+	<header>
+		<div class="mp-Header-ribbonTop"></div>
+		<div class="mp-Header-ribbonBottom"></div>
+	</header>
+{% endblock %}
+
+
+{% block content %}
+	<div id="page-wrapper">
+    <div id="content" class="l-page">
+		<a class="pagelogo" href="/" title="Pax Romana"></a>
+			{% include 'auth.flags.twig' %}
+			<section id="content">
+				<div class="forgot-password-block mp-Card mp-Card--rounded" id="forgot-password-block">
+				<div class="mp-Card-block">
+                <div id="login-tabs" class="mp-Tab-bar mp-Tab-bar--center sdk-custom">
+                    <h3>{{ __('messages.reset_password_title') }}</h3>
+             	   </div>
+            	</div>
+					<div class="mp-Card-block message-block">
+						{% if errors.has('password')  %}
+							<div class="mp-Alert mp-Alert--error">
+								<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+								<div>
+									<ul>
+										<li>{{errors.first('password') }}</li>
+									</ul>
+								</div>
+							</div>
+						{% endif %}
+						<div class="mp-Form login">
+							<div class="mp-Form-body sdk-custom">
+								<form id="new-password-form" method="post" action="{{ route('reset_password') }}">
+									{{ csrf_field() }}
+									<input type="hidden" name="token" value="{{token }}">
+									<div class="form-squeeze">
+										<div class="mp-Form-controlGroup">
+											<label class="mp-Form-controlGroup-label" for="password">{{ __('messages.reset_password_old_password') }}</label>
+											<input id="password" type="password" name="password" class="mp-Input {{ errors.has('password') ? ' invalid' : '' }}" tabindex="1">
+											{% if errors.has('password') %}
+												<div class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+													{{errors.first('password') }}
+												</div>
+											{% endif %}
+										</div>
+
+										<div class="mp-Form-controlGroup">
+											<label class="mp-Form-controlGroup-label" for="password_confirmation">{{ __('messages.reset_password_new_password') }}</label>
+											<input id="password_confirmation" type="password" name="password_confirmation" class="mp-Input" tabindex="2">
+										</div>
+										<div class="mp-Form-controlGroup">
+											<input id="new-password-button" type="submit" class="primary md mp-Button mp-Button--primary mp-Button--md" value="{{ __('messages.reset_password_continue') }}">
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

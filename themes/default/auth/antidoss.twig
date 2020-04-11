@@ -1,0 +1,94 @@
+{% extends "layouts.frontpage" %}
+
+{% block css %}
+	<link href="{{ env('WEBSITE_URL') }}/web/css/index.css" rel="stylesheet">
+{% endblock %}
+{% block navbar %}
+	<header>
+		<div class="mp-Header-ribbonTop"></div>
+		<div class="mp-Header-ribbonBottom"></div>
+	</header>
+{% endblock %}
+
+{% block content %}
+	<div id="page-wrapper">
+		<div class="l-page pagelog">
+			<a class="pagelogo" href="/" title="Pax Romana"></a>
+			{% include 'auth.flags.twig' %}
+			<section class="l-side-left" id="left-column">
+				<div class="mp-Card mp-Card--rounded" id="navigation">
+					<div class="mp-Card-block mp-Card-block--highlight mp-Card-block--padded-md">
+						<div class="navigation-block">
+							<h2 class="heading linetext">
+								<span class="main-label">{{ __('messages.mirrors_link') }}
+								</span>
+							</h2>
+							<ul class="marketmirrors">
+								{% for url_title in load_urls() %}
+									<li>
+										<a href="http://{{url_title}}">{{url_title}}
+											{% if current_website(url_title) %}
+												<img title="verified" width="16" src="/web/images/check2.png"/>
+											{% endif %}
+										</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section class="l-main-right">
+				<div class="mp-Card mp-Card--rounded login">
+					{% if app.session.get('message') %}
+						<div class="mp-Alert mp-Alert--error">
+							<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+							<div>
+								{{ __('messages.antiddoss_captcha_error') }}
+							</div>
+						</div>
+					{% endif %}
+
+					<div class="mp-Card-block">
+						<div class="mp-Form mp-Form--aligned">
+							<form id="account-login-form" class="new-design-form" method="post" action="">
+								{{ csrf_field() }}
+								<h2 style="text-align:center;">ANTI DDOS CAPTCHA</h2>
+								<div class="form-squeeze form-login">
+									<div class="mp-Form-controlGroup">
+										<img style="width: 300px;" src="/captcha.html"/>
+										<input id="captcha" type="text" placeholder="{{ __('messages.login_captcha_text') }}" name="captcha" class="mp-Input {{ errors.has('captcha') ? ' invalid' : '' }}" tabindex="2" required>
+										{% if errors.has('captcha') %}
+											<div class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+												
+											</div>
+										{% endif %}
+									</div>
+									<div class="mp-Form-controlGroup centered-control-group last-control-group">
+										<button id="account-login-button" class="mp-Button mp-Button--primary width-button">
+											<span>{{ __('messages.antiddoss_submit') }}
+											</span>
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="index-log mp-FooterAlternative ">
+						<a  href="http://dreadditevelidot.onion/d/RomanRoad">
+							<img width="30" title="Pax Romana Forum" src="/web/images/dread.png"/>
+						</a>
+						<span class="footer-draw"></span>
+							<a  href="http://raptortiabg7uyez.onion/">
+							<img width="30" title="Raptor Get your links safely" src="/web/images/raptor.png"/>
+						</a>
+				</div>
+				{% include 'auth.extra.twig' %}
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,63 @@
+{% extends "account.master" %}
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_support.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+	<div id="content">
+		{% include 'account.head_support.twig' %}
+		<div style="margin-bottom: 50%;" class="mp-Card mp-Card--rounded">
+			<div class="mp-Card-block">
+            	{% if app.session.get('message') %}
+						<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+							<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+							<div>
+								{{ app.session.get('message') }}
+							</div>
+						</div>
+					{% endif %}
+            <div class="headcreate">
+            <a href="/account/create/ticket" class="button mp-Button mp-Button--primary mp-Button--xs fav-btn">
+            {{ __('messages.account_ticket_title')}}
+			</a>
+             <p>{{ __('messages.account_ticket_title_text')}}</p>
+            </div>
+            <h2>{{ __('messages.account_ticket_ticket_list')}}({{tickets.count}})</h2>
+				<div class="head-table">
+					<table style="width:100%;background-color:#FFFFFF;">
+						<thead>
+							<tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">{{ __('messages.account_ticket_table_1')}}</th>
+                                <th scope="col">{{ __('messages.account_ticket_subject')}}</th>
+                                <th scope="col">{{ __('messages.listing_categories')}}</th>
+                                <th scope="col">{{ __('messages.order_item5')}}</th>
+                                <th scope="col">{{ __('messages.browse_news')}}</th>
+                                <th scope="col">{{ __('messages.account_listings_action')}}</th>
+                            </tr>
+						</thead>
+                        <tbody>
+                        {% if tickets.count != null  %}
+                        {% for ticket in tickets %}
+                        <tr>
+                        <td>{{ticket.id}}</td>
+                        <td>{{ticket.created_at}}</td>
+                        <td>{{ticket.title[:10] ~ '...'}}</td>
+                        <td>{{ticket.category[:15]}}</td>
+                        <td class="{{ticket.status == "Answered" ? 'answered' : ticket.status == "Unanswered" ? 'unanswered' : 'closed'}}">{{ticket.status}}</td>
+                        <td>{{ticket.updated_at.diffForHumans() }}</td>
+                        <td><a href="/account/ticket/{{ticket.id}}">{{ __('messages.account_view')}}</a></td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <td>{{ __('messages.account_ticket_none')}}</td>
+                        {% endif %}
+
+                        </tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+

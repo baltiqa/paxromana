@@ -1,0 +1,225 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/product_info.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+	<div id="page-wrapper">
+		<div id="content" class="l-page">
+			{% if app.session.get('error') %}
+				<div class="mp-Alert mp-Alert--error">
+					<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+					<div>
+						{{ app.session.get('error')}}
+					</div>
+				</div>
+			{% endif %}
+			<h1 class="page-header">{{ __('messages.order_title') }}</h1>
+			<div class="mp-Card mp-Card--rounded">
+				<div class="mp-Card-block">
+					{% if app.session.get('listing') != null %}
+						<form action="{{route('placing.order')}}" method="post">
+							{{ csrf_field() }}
+							<div class="content">
+								<div class="mp-Alert " style="background-color:#F1F1E8;">
+									<span class="mp-Alert-icon mp-svg-info"></span>
+									{% if app.session.get('listing.payment_type_id') == 1 %}
+										<li>{{ __('messages.order_type1')|raw }}</li>
+									{% elseif app.session.get('listing.payment_type_id') == 2 %}
+										<li>{{ __('messages.order_type2')|raw }}</li>
+									{% elseif app.session.get('listing.payment_type_id') == 4 %}
+										<li>{{ __('messages.order_type3')|raw }}</li>
+									{% endif %}
+								</div>
+								<table class="checkoutt">
+									<tr>
+										<td>{{ __('messages.order_item') }}</td>
+										<td>
+											<a href="{{route('listing', {'id' : app.session.get('listing'), 'slug' : str_slug(app.session.get('listing.title'))})}}">{{ app.session.get('listing.title') }}</a>
+										</td>
+									</tr>
+									<tr>
+										<td>{{ __('messages.profile_seller') }}</td>
+										<td>
+											<a href="/profile/{{ app.session.get('listing.user.username') }}">{{ app.session.get('listing.user.username') }}</a>
+										</td>
+									</tr>
+									<tr>
+										<td>{{ __('messages.listing_shipping_options') }}</td>
+										<td>{{app.session.get('shipping_method.days')}}
+											{{ __('messages.order_item4') }}
+											{{ app.session.get('shipping_method.name') }}
+											<span class="{{ app.session.get('payment_method') == 1 ? 'btc20' : app.session.get('payment_method') == 3 ? 'xmr20' : 'ltc20' }}"></span>({{ToUserCurrency(app.session.get('shipping_method.price'),app.session.get('listing.currency'))}}
+											{{auth_user().currency|upper}}/
+											{% if app.session.get('payment_method') == 1 %}
+												{{GetBTCPrice(app.session.get('shipping_method.price'),app.session.get('listing.currency'),"yes")}}
+												BTC
+											{% elseif app.session.get('payment_method') == 3  %}
+												{{GetXMRPrice(app.session.get('shipping_method.price'),app.session.get('listing.currency'),"yes")}}
+												XMR
+											{% elseif app.session.get('payment_method') == 2 %}
+												{{GetLTCPrice(app.session.get('shipping_method.price'),app.session.get('listing.currency'),"yes")}}
+												LTC
+											{% endif %})</td>
+									</tr>
+									<tr>
+										<td>{{ __('messages.order_item1') }}</td>
+										<td>{{ToUserCurrency(app.session.get('listing.price'),app.session.get('listing.currency'))}}
+											{{auth_user().currency|upper}}/
+											{% if app.session.get('payment_method') == 1 %}
+												{{GetBTCPrice(app.session.get('listing.price'),app.session.get('listing.currency'),"yes")}}
+												BTC
+											{% elseif app.session.get('payment_method') == 3  %}
+												{{GetXMRPrice(app.session.get('listing.price'),app.session.get('listing.currency'),"yes")}}
+												XMR
+											{% elseif app.session.get('payment_method') == 2 %}
+												{{GetLTCPrice(app.session.get('listing.price'),app.session.get('listing.currency'),"yes")}}
+												LTC
+											{% endif %}
+										</td>
+									</tr>
+									<tr>
+										<td>{{ __('messages.listing_quantity') }}</td>
+										<td>{{ app.session.get('quantity') }}</td>
+									</tr>
+									<tr>
+										<td>{{ __('messages.order_item2') }}</td>
+										<td>{{ app.session.get('payment_method') == 1 ? 'Bitcoin (BTC)' : app.session.get('payment_method') == 3 ? 'Monero (XMR)' : 'Litecoin (LTC)'  }}<span class="{{ app.session.get('payment_method') == 1 ? 'btc20' : app.session.get('payment_method') == 3 ? 'xmr20' : 'ltc20' }}"></span>
+										</td>
+									</tr>
+									<tr>
+										<td>{{ __('messages.order_item3') }}</td>
+										<td>{{ToUserCurrency((app.session.get('listing.price') * app.session.get('quantity')) + app.session.get('shipping_method.price'),app.session.get('listing.currency'))}}
+											{{auth_user().currency|upper}}
+											/
+											{% if app.session.get('payment_method') == 1 %}
+												{{GetBTCPrice((app.session.get('listing.price') * app.session.get('quantity')) + app.session.get('shipping_method.price'),app.session.get('listing.currency'),"yes")}}
+												BTC
+											{% elseif app.session.get('payment_method') == 3  %}
+												{{GetXMRPrice((app.session.get('listing.price') * app.session.get('quantity')) + app.session.get('shipping_method.price'),app.session.get('listing.currency'),"yes")}}
+												XMR
+											{% elseif app.session.get('payment_method') == 2 %}
+												{{GetLTCPrice((app.session.get('listing.price') * app.session.get('quantity')) + app.session.get('shipping_method.price'),app.session.get('listing.currency'),"yes")}}
+												LTC
+											{% endif %}
+										</td>
+									</tr>
+									<tr>
+										<td>{{ __('messages.listing_ships_from') }}</td>
+										<td>{{app.session.get('listing.shipped_from')}}</td>
+									</tr>
+									<tr>
+										<td>Escrow</td>
+										<td>{{ app.session.get('listing.payment_type_id') == 1 or app.session.get('listing.payment_type_id') == 4 ? 'Yes 100% Escrow' : app.session.get('listing.payment_type.payment_name')}}</td>
+									</tr>
+									<tr>
+										<td>{{ __('messages.listing_product_class') }}</td>
+										<td>{{ app.session.get('listing.listing_class.name') }}</td>
+									</tr>
+								</table>
+
+
+								{% if app.session.get('address')|length > 1 %}
+									<meta http-equiv="refresh" content="5; URL=/checkout">
+									<div class="mp-Alert mp-Alert--error">
+										<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+										<div>
+											{{ __('messages.order_multisigreceived')|raw }}
+										</div>
+									</div>
+									<b>{{ __('messages.order_item5') }} : {{auth_user().CheckMultisig(app.session.get('address_address')) == 'pending' ? 'Pending' : 'Paid'}}</b>
+									<section class="l-body-content mp-Card-block" style="margin: 50px 0; background-color: #EDECED;">
+										<div class="section description">
+											<div id="vip-description-multisig" class="multisig">
+												{% if auth_user().CheckMultisig(app.session.get('address_address')) == 'pending' %}
+												<h2 class="heading heading-3">
+													<b>{{ __('messages.order_sent_exact') }}
+														<i style="color:#EDA566;">{{ app.session.get('btc_price') }}
+															BTC</i>
+														({{ ToUserCurrency(((app.session.get('listing.price') * app.session.get('quantity')) + app.session.get('shipping_method.price')),app.session.get('listing.currency'))  }}
+														{{ GetCurrency() }}) {{ __('messages.order_to_this') }}:</b></br>
+
+														{{ __('messages.order_delays') }}
+												</h2>
+												<div id="vip-ad-description" class="wrapped">
+													{{ app.session.get('address') }}
+												</div>
+												{% else %}
+												<p>{{ __('messages.order_received')|raw }}</p>
+												{% endif %}
+											</div>
+										</div>
+									</section>
+								{% endif %}
+
+								<section class="l-body-content mp-Card-block" style="margin: 50px 0; background-color: #EDECED;">
+									<div class="section description">
+										<div id="vip-description" class="">
+											<h2 class="heading heading-3">
+												<b>{{ __('messages.listing_toc') }}
+													<i style="color:#EDA566;">{{app.session.get('listing.user.username')}}</i>
+												</b>
+											</h2>
+											<div id="vip-ad-description" class="wrapped">
+												{{app.session.get('listing.user.terms_conditions')}}
+											</div>
+										</div>
+									</div>
+								</section>
+
+								<section class="l-body-content mp-Card-block" style="margin: 50px 0; background-color: #EDECED;">
+									<div class="section description">
+										<div id="vip-description" class="">
+											<h2 class="heading heading-3">
+												<b>PGP Key</b>
+											</h2>
+											<div style="word-wrap: break-word; white-space: pre-wrap; line-height: normal" id="vip-ad-description" class="wrapped">
+{{app.session.get('listing.user.pgp_key')}}
+											</div>
+										</div>
+									</div>
+								</section>
+
+								<h2 class="heading heading-3">
+									<b>{{ __('messages.order_shippingornote') }}</b>
+								</h2>
+								<div class="form-field form-textarea">
+									<textarea style="height:150px;" class="mp-Textarea {{ errors.has('shipping') ? ' invalid' : '' }}" id="shipping" name="shipping" maxlength="10000" data-maxlength="10000"></textarea>
+								</div>
+								{% if errors.has('shipping') %}
+									<div class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+										{{ __('messages.order_errorshipping') }}
+									</div>
+								{% endif %}
+
+
+								<input type="checkbox" value="1" name="encryption" checked="checked" disabled><label for="encryption">{{ __('messages.order_address_encrypted') }}
+									<b>{{app.session.get('listing.user.username')}}</b>.
+								</label>
+								<br>
+								<input type="checkbox" value="agremeent" name="agremeent"><label for="agreemenent">{{ __('messages.order_termsofvendor') }}
+								</label>
+								{% if errors.has('agremeent') %}
+									<div class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+										{{ __('messages.order_termsofvendor_error') }}
+									</div>
+								{% endif %}
+								<br>
+
+
+								<button type="submit" style="margin-bottom:3px;float:right;" class="mp-Button mp-Button--primary mp-Button--lg">
+									<span>{{ __('messages.order_now') }}</span>
+								</button>
+							</div>
+						</form>
+					{% else %}
+						<p style="height:800px;">{{ __('messages.order_empty') }}</p>
+
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}
+

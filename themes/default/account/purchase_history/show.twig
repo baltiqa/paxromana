@@ -1,0 +1,282 @@
+{% extends "account.master" %}
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_ads.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+	<div id="content" class="l-page">
+		{% if app.session.get('message') %}
+			<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+				<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+				<div>
+					{{ app.session.get('message') | raw }}
+				</div>
+			</div>
+		{% endif %}
+		<div class="mp-Card mp-Card--rounded">
+			<div class="mp-Card-block">
+				<div class="content">
+					<h2 class="pull-left" style="margin: 0;">
+						<strong>{{ __('messages.account_order') }} #{{ order.id }}</strong>
+					</h2>
+					<h2 class="pull-right" style="margin: 0;">
+						<a class="text-info" href="/account/purchase-history">
+							<strong>← {{ __('messages.listing_back_to_overview') }}</strong>
+						</a>
+					</h2><br>
+
+					<table class="table table-orders-meta">
+						<tbody>
+							<tr>
+								<td>
+									<i class="mp-Icon mp-svg-clock-grey" title="{{ __('messages.account_date_bought') }}"></i>
+									{{ order.created_at.toFormattedDateString }}&nbsp;&nbsp;&nbsp;
+									<i class="mp-Button-icon mp-Button-icon--left mp-svg-handshake" title="{{order.payment_type.payment_name}}"></i>
+									{{order.payment_type.payment_name}}&nbsp;&nbsp;&nbsp;
+									<i class="mp-Button-icon mp-Button-icon--left {{order.is_digtal == 0 ? 'mp-svg-postpackage' : 'mp-svg-digital'}} " title="{{order.is_digtal == '0' ? __('messages.listing_product_class_1') : __('messages.listing_product_class_2')}}"></i>
+									{{order.is_digtal == '0' ? __('messages.listing_product_class_1') : __('messages.listing_product_class_2')}}&nbsp;&nbsp;
+									<i class="mp-Icon mp-svg-profile style-scope mp-header" title="{{ __('messages.profile_seller') }}"></i>
+									<a href="/profile/{{ order.seller.username }}">{{ order.seller.username }}</a>
+								</td>
+								{% if order.status == "processing" %}
+									<td class="status  status-info ">
+										{{ __('messages.account_order_status1') }}
+									</td>
+								{% endif %}
+								{% if order.status == "shipped" %}
+									<td class="status  status-info ">
+										{{ __('messages.account_order_status2') }}
+									</td>
+								{% endif %}
+								{% if order.status == "finalized" %}
+									<td style="background-color:green;" class="status  status-info ">
+										{{ __('messages.account_order_status3') }}
+									</td>
+								{% endif %}
+								{% if order.status == "disputed" %}
+									<td style="background-color:red;" class="status  status-info ">
+										{{ __('messages.account_order_status4') }}
+									</td>
+								{% endif %}
+								{% if order.status == "cancelled" %}
+									<td style="background-color:red;" class="status  status-info ">
+										{{ __('messages.account_order_status5') }}
+									</td>
+								{% endif %}
+							</tr>
+						</tbody>
+					</table>
+
+
+					<table style="width:100%" class="table table-bordered">
+						<thead>
+							<tr>
+								<th style="width: 100px;" class="text-center">{{ __('messages.listing_quantity') }}</th>
+								<th>{{ __('messages.account_listings_prod') }}</th>
+								<th style="width: 150px;" class="text-right">{{ __('messages.account_subtotal') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="width: 100px;" rowspan="2" class="text-center">{{ order.amount }}</td>
+								<td>
+									<p>
+										{{ order.product_title }}
+									</p>
+								</td>
+								<td style="width: 150px;" rowspan="2" class="text-right">
+									{% if order.currency == "BTC" %}
+										{{order.price - order.shipping_fee}}
+										BTC ({{ GetBTCPrice(order.price - order.shipping_fee,auth_user().currency) }}{{auth_user().currency |upper}})
+									{% elseif order.currency == "LTC" %}
+										{{order.price - order.shipping_fee}}
+										LTC ({{ GetLTCPrice(order.price - order.shipping_fee,auth_user().currency) }}{{auth_user().currency |upper}})
+									{% elseif order.currency == "XMR" %}
+										{{order.price - order.shipping_fee}}
+										XMR ({{ GetXMRPrice(order.price - order.shipping_fee,auth_user().currency) }}{{auth_user().currency |upper}})
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<td class="text-muted">{{ __('messages.account_dispatched_on') }}
+									{{ order.updated_at.toFormattedDateString }}</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="row">
+						<p class="text-info">
+							{% if order.status == "shipped" %}
+								<li>{{ __('messages.account_sale_finalized') }}
+									<i style="color:blue;">{{order.elapsed('auto_final').days + (order.elapsed('auto_final').weeks*7 )}}</i>
+									{{ __('messages.account_listings_days') }}
+									<i style="color:blue;">{{order.elapsed('auto_final').hours}}</i>
+									{{ __('messages.account_listings_hou') }}
+									<i style="color:blue;">{{order.elapsed('auto_final').minutes}}</i>
+									{{ __('messages.account_listings_min') }}
+									<i style="color:blue;">{{order.elapsed('auto_final').seconds}}</i>
+									{{ __('messages.account_listings_sec') }}
+								</li><br>
+							{% endif %}
+
+							{% if order.status == "accepted" %}
+								<li>{{ __('messages.account_sale_cancelled') }}
+									<i style="color:blue;">{{order.elapsed('auto_final').days + (order.elapsed('auto_final').weeks*7 )}}</i>
+									{{ __('messages.account_listings_days') }}
+									<i style="color:blue;">{{order.elapsed('auto_final').hours}}</i>
+									{{ __('messages.account_listings_hou') }}
+									<i style="color:blue;">{{order.elapsed('auto_final').minutes}}</i>
+									{{ __('messages.account_listings_min') }}
+									<i style="color:blue;">{{order.elapsed('auto_final').seconds}}</i>
+									{{ __('messages.account_listings_sec') }}
+								</li><br>
+							{% endif %}
+
+							{% if order.status == "finalized" %}
+								{{ __('messages.account_sale_funds_fin')|raw }}
+								{% if order.feedback != null  %}
+									<br>{{ __('messages.account_sale_left_feedback') }}
+									<b>
+										<a href="/profile/{{order.user.username}}">{{order.user.username}}</a>
+										({{order.feedback.rate |number_format(2)}}
+										{{ __('messages.profile_rating') }})</b><br>
+									{{order.feedback.comment == null ? __('messages.account_sale_no_comment') : order.feedback.comment}}
+								{% endif %}
+							{% endif %}
+
+							{% if order.status == "disputed" %}
+								{{ __('messages.account_sale_funds_disp')|raw }}
+							{% endif %}
+							{% if order.status == "cancelled" %}
+								{{ __('messages.account_sale_funds_canc')|raw }}
+							{% endif %}
+
+							{% if order.status == "processing" %}
+								{{ __('messages.account_sale_funds_process')|raw }}
+							{% endif %}
+
+							{% if order.status == "shipped" %}
+								{{ __('messages.account_sale_funds_ship')|raw }}
+							{% endif %}
+						</p>
+						<table class="table" style="float:right;width: 50%; margin: 0;">
+							<tbody>
+								<tr>
+									<th style="border-top: 0; padding-top: 0;" class="text-right">{{ __('messages.listing_postage_1') }}
+																																								'{{ order.shipping.name  }}/{{order.shipping.days}}{{ __('messages.listing_postage_2') }}'
+									</th>
+									<td style="width: 150px; border-top: none; padding-top: 0;" class="text-right">
+										{% if order.currency == "BTC" %}
+											{{ order.shipping_fee|number_format(7) }}BTC
+											<br>({{ GetBTCPrice(order.shipping_fee,auth_user().currency) }}
+											{{auth_user().currency|upper}})
+										{% elseif order.currency == "LTC" %}
+											{{ order.shipping_fee|number_format(7) }}LTC
+											<br>({{ GetLTCPrice(order.shipping_fee,auth_user().currency) }}
+											{{auth_user().currency|upper}})
+										{% elseif order.currency == "XMR" %}
+											{{ order.shipping_fee|number_format(7)  }}XMR
+											<br>({{ GetXMRPrice(order.shipping_fee,auth_user().currency) }}
+											{{auth_user().currency|upper}})
+										{% endif %}
+
+									</td>
+								</tr>
+								<tr>
+									<th class="text-right lead">
+										<strong>{{ __('messages.profile_store_total') }}</strong>
+									</th>
+									<td style="width: 150px;" class="text-right lead">
+										<strong>
+											{% if order.currency == "BTC" %}
+												{{ order.price|number_format(7) }}BTC  ({{ GetBTCPrice(order.price,auth_user().currency) }}
+												{{auth_user().currency|upper}})
+											{% elseif order.currency == "LTC" %}
+												{{  order.price|number_format(7) }}LTC  ({{ GetLTCPrice(order.price,auth_user().currency) }}
+												{{auth_user().currency|upper}})
+											{% elseif order.currency == "XMR" %}
+												{{ order.price|number_format(7) }}XMR  ({{ GetXMRPrice( order.price,auth_user().currency) }}
+												{{auth_user().currency|upper}})
+											{% endif %}
+
+										</strong>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+
+					<div style="margin-top: 50px;" class="l-body-content mp-Card-block">
+						<h2 class="heading heading-3">
+							<b>{{ __('messages.account_sale_seller_note') }}</b>
+						</h2>
+
+						<div class="form-field form-textarea">
+							<textarea style="height:150px;background-color:#F5F7FA;" readonly="readonly" class="mp-Textarea " disabled>{{order.notes}}</textarea>
+						</div>
+
+						{% if order.autodispatch  %}
+							<h2 class="heading heading-3">
+								<b>{{ __('messages.listing_dispatch_notes') }}</b>
+							</h2>
+							<div class="form-field form-textarea">
+								<textarea style="height:150px;background-color:#F5F7FA;" readonly="readonly" class="mp-Textarea " disabled>{{order.autodispatch}}</textarea>
+							</div>
+						{% endif %}
+
+
+						{% if order.status == "shipped" %}
+							<input id="message-box" type="checkbox">
+							<form action="{{ route('account.dispute.create', order.hash) }}" method="post">
+								{{ csrf_field() }}
+								<button type="submit" class="mp-Button mp-Button--primary mp-Button--xs mp-button-right">
+									{{ __('messages.account_sale_create_dispute') }}
+								</button>
+							</form>
+							<label for="message-box" class="mp-Button mp-Button--green mp-Button--xs mp-button-right">{{ __('messages.account_sale_finalize_order') }}</label>
+							<div class="message">
+								<div class="popup">
+								   <div class="message-box-header">
+									{{ __('messages.account_sale_finalize_order') }}
+									<label for="message-box" class="close">
+										<span>×</span>
+									</label>
+									</div>
+									<div class="content">
+										<div class="form-field">
+											<p>{{ __('messages.account_sale_finalize_order_u_sure') }}</p>
+										</div>
+									</div>
+									<div class="content-footer">
+										<div class="form-field">
+											<form action="{{ route('account.finalize.order', order.hash) }}" method="post">
+												{{ csrf_field() }}
+												<label for="message-box" class="mp-Button mp-Button--primary mp-Button--xs">{{ __('messages.profile_cancel') }}</label>
+												<button type="submit" class="mp-Button mp-Button--green mp-Button--xs">
+													{{ __('messages.account_sale_finalize_order') }}
+												</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+						{% if order.status == "finalized" %}
+							<a href="{{ route('account.purchase-history.feedback', order) }}" class="mp-Button mp-Button--primary mp-Button--xs mp-button-right">
+								<span>{{ __('messages.account_sale_leave_feedback') }}</span>
+							</a>
+						{% endif %}
+
+
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}
+

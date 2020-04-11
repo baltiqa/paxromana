@@ -1,0 +1,440 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/place_ads.css" rel="stylesheet">
+	<link href="{{ setting('url') }}/web/css/extra.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+	<div id="page-wrapper">
+		<div class="l-page" style="padding-top: 50px;">
+			<section>
+				<h1 class="pull-left page-header">{{ __('messages.listing_create_title')|raw }}</h1>
+				<h2 class="pull-right">
+					<a class="text-info" href="{{route('account.listings.index')}}">
+						<strong>← {{ __('messages.listing_back_to_overview') }}</strong>
+					</a>
+				</h2>
+				<div class="clearboth"></div>
+				{% if app.session.get('message') %}
+							<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+								<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+								<div>
+									{{ app.session.get('message') | raw }}
+								</div>
+							</div>
+				{% endif %}
+				{% if app.session.get('error') %}
+							<div class="mp-Alert mp-Alert--error">
+                            <span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+								<div>
+									{{ app.session.get('error') | raw }}
+								</div>
+							</div>
+				{% endif %}
+				<form id="syi-form" method="post"  action="{{route('listing.create')}}" accept-charset="UTF-8" enctype="multipart/form-data">
+					{{ csrf_field() }}
+					<div class="box box-stacked">
+						<div class="box-content">
+							<div  class="row form-group">
+								<div class="col-md-6">
+									<label for="title">{{ __('messages.listing_parent') }}</label>
+									<span class="help-block">{{ __('messages.listing_parent_d') }}</span>
+								</div>
+								<div class="col-md-6">
+									<div class="mp-Select category-select-l1 show">
+										<select class="form-control {{ errors.has('parent') ? ' invalid' : '' }}" id="parent" name="parent">
+											<option value="nope">{{ __('messages.listing_parent_no') }}</option>
+											{% for own in own_listing %}
+												<option value="{{own.id}}" {{own.id ==  old("parent")}} ? 'selected=selected' : ''}}>#{{own.id}}
+													{{own.title}}</option>
+											{% endfor %}
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-md-6">
+									<label for="title">{{ __('messages.listing_title') }}</label>
+									<span class="help-block">{{ __('messages.listing_title_d') }}</span>
+								</div>
+								<div class="col-md-6">
+									<input type="text" name="title" id="title" class="mp-Input {{ errors.has('title') ? ' invalid' : '' }}" value="{{ old("title") }}">
+								</div>
+							</div>
+							<div class="row form-group">
+								<div class="col-md-6">
+									<label for="title">{{ __('messages.listing_description') }}</label>
+									<span class="help-block">{{ __('messages.listing_description_d') }}</span>
+								</div>
+								<div class="col-md-6">
+									<textarea class="mp-Textarea {{ errors.has('description') ? ' invalid' : '' }}" id="description" name="description" maxlength="" data-maxlength="" placeholder="">{{ old("description") }}</textarea>
+									<input id="message-box" type="checkbox">
+								</br>
+							</br>
+								<label for="message-box" class="mp-Button mp-Button--primary mp-Button--xs ">Romana {{ __('messages.listing_bbcodes') }}</label>
+									<div class="message">
+								<div class="popup">
+									<div class="message-box-header">
+										Romana {{ __('messages.listing_bbcodes') }}
+										<label for="message-box" class="close">
+											<span>×</span>
+										</label>
+									</div>
+									<div class="content">
+										<div class="form-field">
+											<table style="width:100%;">
+												<tr>
+													<th>{{ __('messages.listing_bbcodes1') }}</th>
+													<th></th>
+													<th>{{ __('messages.listing_bbcodes2') }}</th>
+												</tr>
+												<tr>
+													<td>[h1]Romana[/h1]</td>
+													<td></td>
+													<td><h1>Romana</h1></td>
+												</tr>
+												<tr>
+													<td>[h2]Romana[/h2]</td>
+													<td></td>
+													<td><h2>Romana</h2></td>
+												</tr>
+												<tr>
+													<td>[h3]Romana[/h3]</td>
+													<td></td>
+													<td><h3>Romana</h3></td>
+												</tr>
+												<tr>
+													<td>[b]Romana[/b]</td>
+													<td></td>
+													<td><b>Romana</b></td>
+												</tr>
+												<tr>
+													<td>[i]Romana[/i]</td>
+													<td></td>
+													<td><i>Romana</i></td>
+												</tr>
+												<tr>
+													<td>[u]Romana[/u]</td>
+													<td></td>
+													<td><u>Romana</u></td>
+												</tr>
+												<tr>
+													<td>[li]Romana[/li]</td>
+													<td></td>
+													<td><li style="list-style: square;">Romana</li></td>
+												</tr>
+												<tr>
+													<td>[color=red]Romana[/color]</td>
+													<td></td>
+													<td><span style="color:red;">Romana</spanspan></td>
+												</tr>
+												<tr>
+													<td>[color=white]Romana[/color]</td>
+													<td></td>
+													<td><span style="color:white;">Romana</spanspan></td>
+												</tr>
+												<tr>
+													<td>[color=blue]Romana[/color]</td>
+													<td></td>
+													<td><span style="color:blue;">Romana</spanspan></td>
+												</tr>
+											</table><br>
+											<b>{{ __('messages.listing_bbcodes_request') }}</b>
+										</div>
+									</div>
+									<div class="content-footer">
+										<div class="form-field">
+											<label for="message-box" class="mp-Button mp-Button--primary mp-Button--xs">{{ __('messages.listing_bbcodes_close') }}</label>
+										</div>
+									</div>
+								</div>
+							</div>
+								</div>
+							</div>
+
+
+							<div class="row form-group">
+								<div class="col-md-6">
+									<label for="title">{{ __('messages.listing_tags') }}</label>
+									<span class="help-block">{{ __('messages.listing_tags_d') }}</span>
+								</div>
+								<div class="col-md-6">
+									<textarea class="mp-Textarea {{ errors.has('tags') ? ' invalid' : '' }}" id="tags" name="tags" maxlength="" placeholder="">{{ old("tags")}}</textarea>
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-md-6">
+									<label for="title">{{ __('messages.listing_categories') }}</label>
+									<span class="help-block">{{ __('messages.listing_categories_d') }}</span>
+								</div>
+
+								<div class="col-md-6">
+									<div class="mp-Select category-select-l1 show">
+										<select class="form-control {{ errors.has('category') ? ' invalid' : '' }}" id="category" name="category">
+											{% for category in categories %}
+											{% if category.child | length != null %}
+											<optgroup class="optstyle" label="{{ category.name}}">
+												{% for child in category.child %}
+												 {% if child.child | length != null %}
+												<optgroup class="optstyle" label="{{child.name}}">
+												{% for child2 in child.child %}
+												<option value="{{child2.id}}" {{old("category")== child2.id ? 'selected="selected"' : ''}}>{{child2.name}}</option>
+												{% endfor %}
+												</optgroup>
+												{% else %}
+												<option value="{{child.id}}" {{old("category") == child.id ? 'selected="selected"' : ''}}>{{ child.name}}</option>
+												{% endif %}
+												{% endfor %}
+											</optgroup>
+											{% else %}
+											<option class="optstyle" value="{{category.id}}" {{old("category") == category.id ? 'selected="selected"' : ''}}>{{ category.name}}</option>
+											{% endif %}
+											{% endfor %}
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-md-6">
+									<label for="title">{{ __('messages.listing_product_class') }}</label>
+									<span class="help-block">{{ __('messages.listing_product_class_d') }}</span>
+								</div>
+								<div class="col-md-6">
+									<div class="mp-Select category-select-l1 show">
+										<select class="{{ errors.has('listingclass') ? ' invalid' : '' }}" name="listingclass">
+											<option {{ old('listingclass') == 1 ? 'selected="selected"' : ''}} value="1">{{ __('messages.listing_product_class_1') }}</option>
+											<option {{ old('listingclass') == 2 ? 'selected="selected"' : ''}} value="2">{{ __('messages.listing_product_class_2') }}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-md-6">
+									<label for="title">{{ __('messages.listing_visibility') }}</label>
+									<span class="help-block">{{ __('messages.listing_visibility_d') }}</span>
+								</div>
+								<div class="col-md-6">
+									<div class="mp-Select category-select-l1 show">
+										<select class="{{ errors.has('status') ? ' invalid' : '' }}" name="status">
+											<option {{ old('status') == 1 ? 'selected="selected"' : ''}} value="1">{{ __('messages.listing_visibility_1') }}</option>
+											<option {{ old('status') == 0 ? 'selected="selected"' : ''}} value="0">{{ __('messages.listing_visibility_2') }}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row form-group">
+								<div class="col-md-6">
+									<label for="title">{{ __('messages.listing_escrow') }}</label>
+									<span class="help-block">{{ __('messages.listing_escrow_d') }}</span>
+								</div>
+								<div class="col-md-6">
+									<div class="mp-Select category-select-l1 show">
+										<select class="{{ errors.has('escrow') ? ' invalid' : '' }}" name="escrow">
+											{% if auth_user().has_fe == 1 %}
+												<option {{ old('escrow') == 2 ? 'selected="selected"' : ''}} value="2">{{ __('messages.listing_escrow_1') }}</option>
+											{% endif %}
+											<option {{ old('escrow') == 1 ? 'selected="selected"' : ''}} value="1">{{ __('messages.listing_escrow_2') }}</option>
+											<option {{ old('escrow') == 4 ? 'selected="selected"' : ''}} value="4">{{ __('messages.listing_escrow_3') }}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="box box-stacked">
+						<div class="box-header">
+							<h2 class="heading-2">{{ __('messages.listing_product_details') }}</h2>
+						</div>
+						<div class="box-content">
+							<div class="section-content">
+								<div class="row form-group">
+									<div class="col-md-6">
+										<label for="price">{{ __('messages.listing_price') }}</label>
+										<span class="help-block">{{ __('messages.listing_price_d') }}</span>
+									</div>
+									<div class="col-md-6">
+										<div class="row">
+											<div class="col-md-4 form-group">
+												<div class="mp-Select category-select-l1 show">
+													<select class="{{ errors.has('currency') ? ' invalid' : '' }}" name="currency">
+														<option {{old("currency") == 'usd' ? 'selected="selected"' : ''}} value="usd">USD</option>
+														<option {{old("currency") == 'eur' ? 'selected="selected"' : ''}} value="eur">EUR</option>
+														<option {{old("currency") == 'gbp' ? 'selected="selected"' : ''}} value="gbp">GBP</option>
+														<option {{old("currency") == 'aud' ? 'selected="selected"' : ''}} value="aud">AUD</option>
+														<option {{old("currency") == 'cad' ? 'selected="selected"' : ''}} value="cad">CAD</option>
+														<option {{old("currency") == 'brl' ? 'selected="selected"' : ''}} value="brl">BRL</option>
+														<option {{old("currency") == 'dkk' ? 'selected="selected"' : ''}} value="dkk">DKK</option>
+														<option {{old("currency") == 'sek' ? 'selected="selected"' : ''}} value="sek">SEK</option>
+														<option {{old("currency") == 'nok' ? 'selected="selected"' : ''}} value="nok">NOK</option>
+														<option {{old("currency") == 'try' ? 'selected="selected"' : ''}} value="try">TRY</option>
+														<option {{old("currency") == 'cny' ? 'selected="selected"' : ''}} value="cny">CNY</option>
+														<option {{old("currency") == 'hkd' ? 'selected="selected"' : ''}} value="hkd">HKD</option>
+														<option {{old("currency") == 'rub' ? 'selected="selected"' : ''}} value="rub">RUB</option>
+														<option {{old("currency") == 'inr' ? 'selected="selected"' : ''}} value="inr">INR</option>
+														<option {{old("currency") == 'jpy' ? 'selected="selected"' : ''}} value="jpy">JPY</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-md-8 form-group ">
+												<input type="text" name="price" id="price" class="mp-Input {{ errors.has('price') ? ' invalid' : '' }}" value="{{old("price")}}">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row form-group">
+									<div class="col-md-6">
+										<label for="title">{{ __('messages.listing_quantity') }}</label>
+										<span class="help-block">{{ __('messages.listing_quantity_d')|raw }}</span>
+									</div>
+									<div class="col-md-6">
+										<input type="text" name="quantity" id="quantity" class="mp-Input {{ errors.has('quantity') ? ' invalid' : '' }}" value="{{ old("quantity") }}">
+									</div>
+								</div>
+								<div class="row form-group">
+									<div class="col-md-6">
+										<label for="title">{{ __('messages.listing_ships_from') }}</label>
+										<span class="help-block">{{ __('messages.listing_ships_from_d') }}</span>
+									</div>
+									<div class="col-md-6">
+										<div class="mp-Select category-select-l1 show">
+											<select class="{{ errors.has('shipped_from') ? ' invalid' : '' }}" name="shipped_from">
+												{% for country in countries %}
+													<option {{country.country_short_name == old("shipped_from") ? 'selected="selected"' : ''}} value="{{country.country_short_name}}">{{country.country_name}}</option>
+												{% endfor %}
+											</select>
+										</div>
+									</div>
+								</div>
+
+								<div class="row form-group ">
+									<div class="col-md-6">
+										<label for="ships_to">{{ __('messages.listing_ships_to') }}</label>
+										<span class="help-block">{{ __('messages.listing_ships_to_d') }}</span>
+									</div>
+									<div class="col-md-6">
+										<div class="mp-Select country ">
+										
+											<select id="ships_to" class="{{ errors.has('ships_to') ? ' invalid' : '' }}" style="height:200px;" name="ships_to[]" multiple="">
+												{% for country in countries %}
+													<option value="{{country.country_short_name}}" {% if country.country_short_name in old("ships_to") %} selected="selected" {% endif %}>{{ country.country_name}}</option>
+												{% endfor %}
+											</select>
+
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="box box-stacked">
+						<div class="box-header">
+							<h2 class="heading-2">{{ __('messages.listing_product_image') }}
+							</h2>
+						</div>
+						<div class="box-content">
+							<div class="section-content">
+								<p style="color: #656d78;margin-bottom: 20px;">{{ __('messages.listing_product_image_d')|raw }}</p>
+								<div class="row form-group ">
+										<div class="col-sm-4">
+											{% if errors.has('image_1') %}<p style="color: red;">{{ __('messages.listing_product_invalid_img') }}</p>{% endif %}
+											<p><b>{{ __('messages.listing_product_image1') }}</b>({{ __('messages.listing_product_optional') }})</p>
+											<div class="col-md-6">
+												<input name="image_1" id="image_1" type="file">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											{% if errors.has('image_2') %}<p style="color: red;">{{ __('messages.listing_product_invalid_img') }}.</p>{% endif %}
+											<p><b>{{ __('messages.listing_product_image1') }} 2</b>({{ __('messages.listing_product_optional') }})</p>
+											<div class="col-md-6">
+												<input name="image_2" id="image_2" type="file">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											{% if errors.has('image_3') %}<p style="color: red;">{{ __('messages.listing_product_invalid_img') }}.</p>{% endif %}
+											<p><b>{{ __('messages.listing_product_image1') }} 3</b>({{ __('messages.listing_product_optional') }})</p>
+											<div class="col-md-6">
+												<input name="image_3" id="image_3" type="file">
+											</div>
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="box box-stacked">
+						<div class="box-header">
+							<h2 class="heading-2">
+								<span>
+									{{ __('messages.listing_postage') }}
+								</span>
+							</h2>
+							<p style="color: #656d78;margin-bottom: 20px;">{{ __('messages.listing_postage_d') }}</p>
+						</div>
+						<div class="box-content">
+							<div class="clear-fix">
+								<div class="row form-group">
+									<div class="col-md-6">
+										<label for="postage_option">{{ __('messages.listing_postage_1') }}</label>
+									</div>
+									<div class="col-md-2">
+										<label for="postage_shipping">{{ __('messages.listing_postage_2') }}</label>
+									</div>
+									<div class="col-md-2">
+										<label for="postage_price">{{ __('messages.listing_postage_3') }}</label>
+									</div>
+								</div>
+
+
+								{% for i in 1..4 %}
+									<div class="row form-group">
+										<div class="col-md-6 ">
+										<input style="width:100%;" type="text" placeholder="{{ __('messages.listing_postage_1') }}" name="postage_option_{{i}}" id="title_postage" class="mp-Input {{  i == 1 ? errors.has('postage_option_1') ? ' invalid' : '' : i == 2 ? errors.has('postage_option_2') ? ' invalid' : '' : i == 3 ? errors.has('postage_option_3') ? ' invalid' : '' : i == 4 ? errors.has('postage_option_4') ? ' invalid' : '' : i == 5 ? errors.has('postage_option_5') ? ' invalid' : '' : i == 6 ? errors.has('postage_option_6') ? ' invalid' : '' : i == 7 ? errors.has('postage_option_7') ? ' invalid' : '' : i == 8 ? errors.has('postage_option_8') ? ' invalid' : '' : '' }}" value="{{ i == 1 ? old("postage_option_1") : i == 2 ? old("postage_option_2") : i == 3 ? old("postage_option_3") : i == 4 ? old("postage_option_4") : i == 5 ? old("postage_option_5") : i == 6 ? old("postage_option_6") : i == 7 ? old("postage_option_7") : i == 8 ? old("postage_option_8") : ''}}">
+										</div>
+										<div class="col-md-2 ">
+											<input style="width:100%;" type="text" placeholder="{{ __('messages.listing_postage_2') }}" name="postage_shipping_{{i}}" id="days" class="mp-Input {{  i == 1 ? errors.has('postage_shipping_1') ? ' invalid' : '' : i == 2 ? errors.has('postage_shipping_2') ? ' invalid' : '' : i == 3 ? errors.has('postage_shipping_3') ? ' invalid' : '' : i == 4 ? errors.has('postage_shipping_4') ? ' invalid' : '' : i == 5 ? errors.has('postage_shipping_5') ? ' invalid' : '' : i == 6 ? errors.has('postage_shipping_6') ? ' invalid' : '' : i == 7 ? errors.has('postage_shipping_7') ? ' invalid' : '' : i == 8 ? errors.has('postage_shipping_8') ? ' invalid' : '' : '' }}" value="{{ i == 1 ? old("postage_shipping_1") : i == 2 ? old("postage_shipping_2") : i == 3 ? old("postage_shipping_3") : i == 4 ? old("postage_shipping_4") : i == 5 ? old("postage_shipping_5") : i == 6 ? old("postage_shipping_6") : i == 7 ? old("postage_shipping_7") : i == 8 ? old("postage_shipping_8") : ''}}">
+										</div>
+										<div class="col-md-2">
+											<input style="width:100%;" type="text" placeholder="{{ __('messages.listing_postage_3') }}" name="postage_price_{{i}}" id="price" class="mp-Input {{  i == 1 ? errors.has('postage_price_1') ? ' invalid' : '' : i == 2 ? errors.has('postage_price_2') ? ' invalid' : '' : i == 3 ? errors.has('postage_price_3') ? ' invalid' : '' : i == 4 ? errors.has('postage_price_4') ? ' invalid' : '' : i == 5 ? errors.has('postage_price_5') ? ' invalid' : '' : i == 6 ? errors.has('postage_price_6') ? ' invalid' : '' : i == 7 ? errors.has('postage_price_7') ? ' invalid' : '' : i == 8 ? errors.has('postage_price_8') ? ' invalid' : '' : '' }}" value="{{ i == 1 ? old("postage_price_1") : i == 2 ? old("postage_price_2") : i == 3 ? old("postage_price_3") : i == 4 ? old("postage_price_4") : i == 5 ? old("postage_price_5") : i == 6 ? old("postage_price_6") : i == 7 ? old("postage_price_7") : i == 8 ? old("postage_price_8") : ''}}">
+										</div>
+									</div>
+
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+					<div class="box box-stacked">
+						<div class="box-header">
+							<h2 class="heading-2">
+								<span>
+									{{ __('messages.listing_dispatch_notes') }}
+								</span>
+							</h2>
+							<p style="color: #656d78;margin-bottom: 20px;">{{ __('messages.listing_dispatch_notes_d') }} </p>
+						</div>
+						<div class="box-content">
+						<textarea class="mp-Textarea" id="autodispatch" name="autodispatch" style="height:150px;" placeholder="">{{listing.autodispatch}}</textarea>
+						</div>
+					</div>
+					<div class="box box-stacked" id="place-advertisement">
+						<div class="box-content">
+							<button type="submit" id="syi-place-ad-button" class="mp-Button mp-Button--primary mp-Button--lg">
+								<span>{{ __('messages.listing_create_listing') }}</span>
+							</button>
+						</div>
+					</div>
+				</form>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+

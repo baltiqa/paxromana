@@ -1,0 +1,25 @@
+	 <div class="mp-Topbar">
+                <section class="mp-Topbar-inner-wrapper">
+                    <div class="mp-Tab-bar ">
+                    
+                       <a href="/account/vendor_settings" class="mp-Tab {{ MetaTag.get('vendor_id') == 1 ? 'is-selected' : ''}} ">
+                        {{ __('messages.account_head_vendor_1') }}
+                        </a>
+                        <a href="/account/listings" class="mp-Tab {{ MetaTag.get('vendor_id') == 2 ? 'is-selected' : ''}} ">
+                        {{ __('messages.account_head_vendor_2') }}({{auth_user().listings.count()}})
+                        </a>
+                        <a href="/account/orders" class="mp-Tab {{ MetaTag.get('vendor_id') == 5 ? 'is-selected' : ''}} ">
+                        {{ __('messages.account_head_vendor_3') }}({{auth_user().orders.count()}})
+
+                        </a>
+                        <a href="/account/disputes#chat" class="mp-Tab {{ MetaTag.get('vendor_id') == 15 ? 'is-selected' : ''}} ">
+                         {{ __('messages.account_head_vendor_4') }}({{auth_user().disputesSeller.count()}})
+                        </a>
+                        <a href="/account/feedbacks" class="mp-Tab {{ MetaTag.get('vendor_id') == 3 ? 'is-selected' : ''}} ">
+                        {{ __('messages.account_head_vendor_5') }}({{auth_user().count_reviews()}})
+                        </a>
+                    </div>
+                </section>
+        </div>
+
+        				

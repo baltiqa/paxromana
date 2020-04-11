@@ -1,0 +1,271 @@
+{% extends "account.master" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_ads.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block user_area %}
+	<section id="content">
+		<div id="seller-panel">
+			{% include 'account.head_vendor_bar.twig' %}
+			{% if app.session.get('message') %}
+				<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+					<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+					<div>
+						{{ app.session.get('message') }}
+					</div>
+				</div>
+			{% endif %}
+			{% if app.session.get('error') %}
+						<div class="mp-Alert mp-Alert--error">
+							<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+							<div>
+								{{ app.session.get('error') }}
+							</div>
+						</div>
+			{% endif %}
+			<div class="canvas">
+				<div id="ad-listing-table" class="table ad-listing-container seller">
+					<div id="table-head-stickies">
+						<div id="ad-listing-header" class="table-head ad-listing compact">
+							<div class="row">
+								<div style="width:21%;margin:5px;" class="cell select-column">
+									<div id="tableActionPanel">
+										<form action="{{ route('account.remove.listings') }}" method="post">
+											{{ csrf_field() }}
+											<button type="submit" class="mp-Button mp-Button--primary mp-Button--xs">
+												<span class="mp-Icon mp-svg-delete-white"></span>
+												{{ __('messages.notifications_delete_1')}}
+											</button>
+										</div>
+									</div>
+									<div class="cell views-column">
+										<span>{{ __('messages.account_listings_prod')}}</span>
+									</div>
+									<div class="cell views-column">
+										<span>{{ __('messages.wallet_table_3')}}</span>
+									</div>
+									<div class="cell views-column">
+										<span>{{ __('messages.profile_store_sold')}}</span>
+									</div>
+									<div class="cell views-column">
+										<span>{{ __('messages.account_listings_supp')}}</span>
+									</div>
+									<div class="cell views-column">
+										<span>{{ __('messages.profile_store_views')}}</span>
+									</div>
+									<div class="cell position-column">
+										<span>{{ __('messages.account_listings_action')}}</span>
+										<a style="float:right;" href="{{ route('account.trash.listings') }}" class="mp-Button mp-Button--primary mp-Button--xs">
+												<span class="mp-Icon mp-svg-delete-white"></span>
+												{{ __('messages.account_listings_trashed')}}({{listings_deleted_count}})
+											</a>
+									</div>
+								</div>
+							</div>
+							<div id="scroll-under-top-border"></div>
+						</div>
+						{% for item in listings %}
+							<div id="ad-listing-table-body" class="table-body">
+								<div class="row ad-listing compact">
+									<div class="cells">
+										<div class="cell icon-column middle">
+											<input name="ids[]" value="{{ item.id }}" type="checkbox">
+										</div>
+										<div class="cell thumbnail-column">
+											<a href="{{route('listing', {'id' : item, 'slug' : str_slug(item.title)})}}">
+												<img src="{{item.getPhoto()}}">
+											</a>
+											<div class="flex-row">
+												<span style="font-size:12px;" class="type">{{ToUserCurrency(item.price,item.currency)}} {{auth_user().currency|upper}}</span>
+											</div>
+										</div>
+										<div class="cell description-column" style="width: 16%;">
+											<div class="description-title">
+												<a href="{{route('listing', {'id' : item, 'slug' : str_slug(item.title)})}}">
+													<span>(parent){{item.title}}</span><br>
+												</a>
+												{% if item.spotlight > 'now'|date('Y-m-d H:i:s') %}
+													<span class="adssize">
+														<b>Ads+++:</b>
+														<i class="active">{{ item.elapsed('spotlight').days }}
+															{{ __('messages.account_listings_days')}}
+															{{ item.elapsed('spotlight').hours }}
+															{{ __('messages.account_listings_hou')}}
+															{{item.elapsed('spotlight').minutes}}
+															{{ __('messages.account_listings_min')}}</i>
+													</span><br>
+												{% else %}
+													<span class="adssize">Ads+++:
+														<i class="disabled">{{ __('messages.not_active')}}</i>
+													</span><br>
+												{% endif %}
+												{% if item.priority_until > 'now'|date('Y-m-d H:i:s') %}
+													<span class="adssize">
+														<b>Ads ++:</b>
+														<i class="active">{{ item.elapsed('priority_until').days }}
+															{{ __('messages.account_listings_days')}}
+															{{ item.elapsed('priority_until').hours }}
+															{{ __('messages.account_listings_hou')}}
+															{{item.elapsed('priority_until').minutes}}
+															{{ __('messages.account_listings_min')}}</i>
+													</span><br>
+												{% else %}
+													<span class="adssize">Ads++:
+														<i class="disabled">{{ __('messages.not_active')}}</i>
+													</span><br>
+												{% endif %}
+												{% if item.bold_until > 'now'|date('Y-m-d H:i:s') %}
+													<span class="adssize">
+														<b>Ads+:</b>
+														<i class="active">{{ item.elapsed('bold_until').days }}
+															{{ __('messages.account_listings_days')}}
+															{{ item.elapsed('bold_until').hours }}
+															{{ __('messages.account_listings_hou')}}
+															{{item.elapsed('bold_until').minutes}}
+															{{ __('messages.account_listings_min')}}</i>
+													</span><br>
+												{% else %}
+													<span class="adssize">Ads+:
+														<i class="disabled">{{ __('messages.not_active')}}</i>
+													</span><br>
+												{% endif %}
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="listing-status">
+												<div class="activity {{item.is_published == 1 ? 'active' : 'disabled'}}">{{item.is_published == 1 ? __('messages.active') : __('messages.listing_visibility_2')}}</div>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="listing-status">
+												<div class="activity">{{item.orders.count()}}</div>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="listing-status">
+												<div class="activity">{{item.quantity == -1 ? __('messages.listing_unlimited') : item.quantity}}</div>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="amount">
+												<span class="mp-Icon mp-Icon--sm mp-svg-eye-open-grey mp-hide-sm"></span>
+												{{item.views_count}}</div>
+										</div>
+										<div class="cell position-column features-column" style="width: 26%;">
+											<div class="cta">
+												<a href="{{ route('account.ads',item) }}" class="mp-Button--xs mp-Button--primary">
+													Ads
+												</a>|
+												<a href="{{ route('listing.edit',item) }}" class="mp-Button--xs mp-Button--primary">
+													{{ __('messages.profile_edit')}}
+												</a>|<a href="{{item.is_published != 1 ? route('listing.enable',item) : route('listing.disable',item)}}" class="mp-Button--xs mp-Button--primary">
+													{{item.is_published != 1 ? __('messages.listing_visibility_1') : __('messages.listing_visibility_2')}}
+												</a>
+											</a>|<a href="{{ route('listing.clone',item) }}" class="mp-Button--xs mp-Button--primary">
+												{{ __('messages.account_listings_clone')}}
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% for child in item.childs %}
+							<div id="ad-listing-table-body" class="table-body child">
+								<div class="row ad-listing compact">
+									<div class="cells">
+										<div class="cell icon-column middle">
+											<input name="ids[]" value="{{ child.id }}" type="checkbox">
+										</div>
+										<div class="cell thumbnail-column">
+											<a href="{{route('listing', {'id' : child, 'slug' : str_slug(child.title)})}}">
+												<img src="{{child.getPhoto()}}">
+											</a>
+											<div class="flex-row">
+												<span style="font-size:12px;"  class="type">{{ToUserCurrency(child.price,child.currency)}} {{auth_user().currency|upper}}</span>
+											</div>
+										</div>
+										<div class="cell description-column" style="width: 16%;">
+											<div class="description-title">
+												<a href="{{route('listing', {'id' : child, 'slug' : str_slug(child.title)})}}">
+													<span>(child){{child.title}}</span><br>
+												</a>
+												{% if child.spotlight > 'now'|date('Y-m-d H:i:s') %}
+													<span class="adssize">
+														<b>Ads+++:</b>
+														<i class="active">{{ child.until('spotlight').days }}
+															{{ __('messages.account_listings_days')}}
+															{{ child.until('spotlight').hours }}
+															{{ __('messages.account_listings_hou')}}
+															{{child.until('spotlight').minutes}}
+															{{ __('messages.account_listings_min')}}</i>
+													</span><br>
+												{% else %}
+													<span class="adssize">Ads+++:
+														<i class="disabled">{{ __('messages.not_active')}}</i>
+													</span><br>
+												{% endif %}
+												{% if child.priority_until > 'now'|date('Y-m-d H:i:s') %}
+													<span class="adssize">
+														<b>Ads ++:</b>
+														<i class="active">{{ child.until('priority_until').days }}
+															{{ __('messages.account_listings_days')}}
+															{{ child.until('priority_until').hours }}
+															{{ __('messages.account_listings_hou')}}
+															{{child.until('priority_until').minutes}}
+															{{ __('messages.account_listings_min')}}</i>
+													</span><br>
+												{% else %}
+													<span class="adssize">Ads++:
+														<i class="disabled">{{ __('messages.not_active')}}</i>
+													</span><br>
+												{% endif %}
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="listing-status">
+												<div class="activity {{child.is_published == 1 ? 'active' : 'disabled'}}">{{child.is_published == 1 ? __('messages.active') : __('messages.listing_visibility_2')}}</div>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="listing-status">
+												<div class="activity">{{child.orders.count()}}</div>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="listing-status">
+												<div class="activity">{{child.quantity == -1 ? __('messages.listing_unlimited')  : child.quantity}}</div>
+											</div>
+										</div>
+										<div class="cell views-column">
+											<div class="amount">
+												<span class="mp-Icon mp-Icon--sm mp-svg-eye-open-grey mp-hide-sm"></span>
+												{{child.views_count}}</div>
+										</div>
+										<div class="cell position-column features-column" style="width: 20%;">
+											<div class="cta">
+												<a href="{{ route('account.ads',child) }}" class="mp-Button--xs mp-Button--primary">
+													Ads
+												</a>|
+												<a href="{{ route('listing.edit',child) }}" class="mp-Button--xs mp-Button--primary">
+													{{ __('messages.profile_edit')}}
+												</a>|<a href="{{child.is_published != 1 ? route('listing.enable',child) : route('listing.disable',child)}}" class="mp-Button--xs mp-Button--primary">
+													{{child.is_published != 1 ? __('messages.listing_visibility_1') : __('messages.listing_visibility_2')}}
+												</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					{% endfor %}
+				</form>
+				<div class="mp-PaginationControls">
+					{{ listings.links() | raw }}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>{% endblock %}
+

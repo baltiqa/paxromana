@@ -1,0 +1,75 @@
+{% extends "account.master" %}
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_support.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block user_area %}
+	<div id="content">
+		{% include 'account.head_support.twig' %}
+		<div class="mp-Card mp-Card--rounded">
+			<div class="mp-Card-block">
+				<div class="edit-profile-block clear-fix">
+					<div class="form-field">
+						<p style="text-align:right;">
+							<b>{{ __('messages.account_ticket_table_1')}}:</b>
+							{{report.created_at |date('d-m-Y H:i:s')}}
+							<b>{{ __('messages.wallet_table_3')}}:</b>
+							<span class="{{report.active == "1" ? 'unanswered' : 'answered'}}">{{report.active == 1 ? __('messages.account_unsolved') : __('messages.account_solved') }}</span>
+						</p>
+						<h3 class="heading heading-3">
+							<b>{{ __('messages.account_ticket_report_title')}} #{{report.id}}
+							</h3>
+							<p>{{ __('messages.account_moderator_will_do')}}
+								<b>{{report.reportedUser.username}}</b>
+								{{ __('messages.account_moderator_will_do1')}}</p>
+						</div>
+
+						<div class="form-field">
+							<h3 class="heading heading-3">
+								<b>{{ __('messages.account_ticket_conversation')}}</b>
+							</h3>
+							<input style="background-color:#EEEEEE;" type="text" class="mp-Input" value="{{report.reported_conversation != null ?  __('messages.carts_yes') : __('messages.carts_no')}}" disabled="">
+						</div>
+
+						<div class="form-field">
+							<h3 class="heading heading-3">
+								<b>{{ __('messages.profile_reason')}}</b>
+							</h3>
+							<textarea style="background-color:#EEEEEE;height:100px;" class="mp-Textarea" id="text" name="text" disabled>{{report.reason}}</textarea>
+						</div>
+
+
+						<div class="form-field">
+							<h3 class="heading heading-3">
+								<b>{{ __('messages.profile_notes')}}</b>
+							</h3>
+							<textarea style="background-color:#EEEEEE;height:100px;" class="mp-Textarea" id="text" name="text" disabled>{{report.notes}}</textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div class="mp-Card mp-Card--rounded">
+			<div class="mp-Card-block">
+				<div class="edit-profile-block clear-fix">
+					<div class="form-field">
+						<h3 class="heading heading-3">
+							<b>{{ __('messages.account_moderator_decision')}} #{{report.id}}
+							</h3>
+						</div>
+						<div class="form-field">
+							<h3 class="heading heading-3">
+								<b>{{ __('messages.account_moderator_decision')}}</b>
+							</h3>
+							<textarea style="background-color:#EEEEEE;height:100px;" class="mp-Textarea" id="text" name="text" disabled>{{report.moderator_message == null ?  __('messages.account_moderator_decision1') : report.moderator_message}}</textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+        
+	</div>
+{% endblock %}
+

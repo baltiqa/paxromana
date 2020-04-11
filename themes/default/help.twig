@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<title>{{ MetaTag.get('title') }}</title>
+
+		<link href="/web/css/wiki.css" rel="stylesheet">
+		<link href="/web/images/favicon.ico" rel="shortcut icon">
+
+	</head>
+	<body class="mediawiki">
+		<div id="globalWrapper">
+			<div id="column-content">
+				<div class="mw-body" id="content" role="main">
+					<div class="mw-indicators mw-body-content"></div>
+					<h1 class="firstHeading" id="firstHeading">Wiki Page</h1>
+					<div class="mw-body-content" id="bodyContent">
+						<div class="mw-content-ltr" id="mw-content-text">
+							<blockquote style="background-color: #E6E8F8; border: solid thin grey;">
+								<center>
+									<b>Welcome to
+										<a class="external text" href="Main_Page.html" rel="nofollow noreferrer noopener" target="_blank">The Roman Wiki</a>
+										- Get your information how to use the marketplace Pax Romana!</b>
+								</center>
+							</blockquote>
+							<table class="toccolours vatop infobox" cellpadding="1" cellspacing="1" style="float:right; clear:right; width:270px; padding:0px; margin:0px 0px 1em 1em; font-size:85%;">
+								<tbody>
+									<tr>
+										<td style="background-color:#e3e3e3; color:#000000;" align="center" colspan="3">
+											<div style="font-weight:bold; font-size:120%;">Ross Ulbricht
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+										<td align="center" style="padding:0;" colspan="3">
+											<img alt="Ross Ulbricht" src="/web/images/freedom.jpg" width="266" height="381">
+										</td>
+									</tr>
+									<tr>
+										<td align="center" colspan="3">
+											<div style="font-size:85%">
+												<i>Dread Pirate Roberts</i>
+												Silk Road(defunct)</div>
+										</td>
+									</tr>
+									<tr>
+										<td style="background-color:#e3e3e3; color:#000000;" align="center" colspan="3">
+											<b>Written By</b>
+										</td>
+									</tr>
+									<tr>
+										<td style="font-weight:bold;">Profession</td>
+										<td colspan="2">Creator of Silk Road(defunct)
+										</td>
+									</tr>
+									<tr>
+										<td style="font-weight:bold;">Period</td>
+										<td colspan="2">Feb/2011 - May/2013
+										</td>
+									</tr>
+									<tr>
+										<td style="font-weight:bold;">Criminal Status</td>
+										<td colspan="2">In Prison
+										</td>
+									</tr>
+									<tr>
+										<td style="font-weight:bold;">Advice</td>
+										<td colspan="2">Be smart, take the OPSEC measures seriously.</td>
+									</tr>
+								</tbody>
+							</table>
+							<h1>
+								<span class="mw-headline">{{single_news.title}}</span>
+							</h1>
+							<small>
+								<b>Posted
+									{{single_news.created_at.diffForHumans(null, true)}}
+									ago</b>
+							</small><br>
+							{{single_news.body | raw}}			
+						</div>
+							<div class="article-feedback">
+									<div id="feedback-button" style="display:inline">
+										<hr class="article-hr">What do you think about it?
+										<div class="btn-group feedback-radio-group">
+											<a  href="/wiki/{{single_news.id}}/voteup"><label style="background-color:#F0F0F0;" class="btn btn-secondary radio-btn">{{single_news.vote_up}}
+												<img style="height: 21px; width: 21px;" src="/web/images/thumbs-up-solid.png">
+											</label></a>
+											<a  href="/wiki/{{single_news.id}}/votedown"><label style="background-color:#F0F0F0" class="btn btn-secondary radio-btn">{{single_news.vote_down}}
+												<img style="height: 21px; width: 21px;" src="/web/images/thumbs-down-solid.png">
+											</label></a>
+										</div>
+									</div>
+								</div>
+					</div>
+				</div>
+			</div>
+			<div id="column-one">
+				<div class="portlet" id="p-logo" role="banner">
+					<a class="mw-wiki-logo" href="/wiki/" title="Visit the main page"></a>
+				</div>
+				<div class="portlet" id="p-search" role="search">
+					<h3>
+						<label for="searchInput">Search</label>
+					</h3>
+					<div class="pBody" id="searchBody">
+						<form action="{{route('page')}}" id="searchform" name="searchform" method="GET">
+							<input id="searchInput" name="search" placeholder="Search The Wiki" title="Search The Wiki" text="search">
+							<button class="searchButton" id="mw-searchButton" title="Search the pages for this text" type="submit" value="Search">Search</button>
+						</form>
+					</div>
+				</div>
+				<label>contents</label>
+				<div>
+					<div class="toc" id="toc">
+						<ul>
+							{% for key, cat in newscat %}
+								<li  class="toclevel-1">
+									<a {{ cat.id == single_news.id or single_news.parent_id == cat.id   ?  'style="color:black;font-weight:bold;"' : ''}} href="{{ cat.disabled == 0  ? route('page.single',cat.id) : '#' }}">
+										<span class="tocnumber">{{key+1}}</span>
+										<span class="toctext">{{cat.title}}</span>
+									</a>
+									{% if cat.newsc().count != 0 %}
+										<ul>
+											{% for childkey,newschild in cat.newsc() %}
+												<li  class="toclevel-2">
+													<a {{ newschild.id == single_news.id ?  'style="color:black;font-weight:bold;"' : ''}} href="{{route('page.single',newschild.id)}}">
+														<span class="tocnumber">{{key+1}}.{{childkey+1}}</span>
+														<span class="toctext">{{newschild.title}}</span>
+													</a>
+												</li>
+											{% endfor %}
+										</ul>
+									{% endif %}
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+				<h2>Navigation menu</h2>
+				<div class="portlet" id="p-cactions" role="navigation">
+					<h3>Views</h3>
+					<div class="pBody">
+						<ul>
+							<li id="ca-nstab-main">
+								<a href="{{route('page')}}" title="Home">Home Wiki</a>
+							</li>
+							<li class="selected" id="ca-nstab-main">
+								<a href="{{route('page.single',single_news.id)}}" title="Home">Wiki Page</a>
+							</li>
+							<li id="ca-viewsource">
+								<a href="{{ setting('url') }}/account/create/ticket" title="View the content page [c]">Create Ticket</a>
+							</li>
+							<li id="ca-talk">
+								<a href="/d/RomanRoad" title="View the content page [c]">Dread Roman</a>
+							</li>
+							<li id="ca-history">
+								<a href="{{ setting('url') }}/pgp.txt" title="PGP Key of Pax Romana">Pax Romana PGP</a>
+							</li>
+							<li id="ca-history">
+								<a href="{{ setting('url') }}/" title="View the content page [c]">Go Back to Market</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="portlet" id="p-personal">
+					<h3>Personal tools</h3>
+					<div class="pBody">
+						<ul>
+							<li id="pt-login">
+								<a href="{{ setting('url') }}/profile/{{auth_user().username}}" title="Your account">{{auth_user().username}}</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="portlet" id="p-tb">
+					<h3>Tools</h3>
+					<div class="pBody">
+						<ul>
+							<li><a href="{{setting('url')}}/help/mirrors" title="Mirros Explanation">Mirrors</a></li>
+							<li><a href="{{setting('url')}}/account/create/ticket?t=vendor" title="Request FE rights">Request FE rights</a></li>
+							<li><a href="{{setting('url')}}/account/apply_vendor" title="Apply Vendor">Apply Vendorship</a></li>
+							<li><a href="{{setting('url')}}/account/ticket/create" title="Contact Support">Contact Support</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="visualClear"></div>
+			<div id="footer" role="contentinfo">
+				<ul id="f-list">
+					<li>Copyright © 2019-2020 Pax Romana Wiki</li>
+				</ul>
+				<span style="display:none;">Some parts of our wiki are from different sources such as a market. We thank you for the texts :D</span>
+			</div>
+		</div>
+	</body>
+</html>
+

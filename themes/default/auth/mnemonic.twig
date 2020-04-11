@@ -1,0 +1,90 @@
+{% extends "layouts.frontpage" %}
+
+{% block css %}
+<link href="{{ env('WEBSITE_URL') }}/web/css/index.css" rel="stylesheet">
+{% endblock %}
+{% block navbar %}
+	<header>
+		<div class="mp-Header-ribbonTop"></div>
+		<div class="mp-Header-ribbonBottom"></div>
+	</header>
+{% endblock %}
+
+{% block content %}
+<div id="page-wrapper">
+
+    <div id="content" class="l-page">
+       <a class="pagelogo" href="/" title="Pax Romana"></a>
+            {% include 'auth.flags.twig' %}
+            <div class="mp-Alert " style="background-color:#D4EFFA;">
+					<span class="mp-Alert-icon mp-svg-info"></span>
+					<div>
+						<li style="color:black;">{{ __('messages.session_title') }}</li>
+					</div>
+				</div>
+        {% if errors.any()  %}
+        <div class="mp-Alert mp-Alert--error">
+            <span aria-hidden="true" class="mp-Alert-icon mp-svg-alert--inverse"></span>
+            <div>
+                <ul>
+                        <li>{{ __('messages.mnemonic_error') }}</li>
+                </ul>
+            </div>
+          </div>
+          {% endif %}
+        <div class="mp-Card mp-Card--rounded login">
+            <div class="mp-Card-block">
+                <div id="login-tabs" class="mp-Tab-bar mp-Tab-bar--center sdk-custom">
+                    <h2 class="mp-text-header2 sub-header">{{ __('messages.mnemonic_title') }}</h2>
+                </div>
+            </div>
+            <div class="mp-Card-block">
+                <div class="mp-Form mp-Form--aligned">
+                    <div class="mp-Form-body sdk-custom">
+                        <form id="account-login-form" class="new-design-form" method="post"
+                            action="{{ route('mnemonic_post') }}">
+                            {{ csrf_field() }}
+                            <p>{{ __('messages.mnemonic_text1')|raw }}</p>
+                            <div class="form-squeeze form-login">
+                                <h4>{{ __('messages.mnemonic_key') }}</h4>
+                                <div class="linesOver">
+                                    <p class="textFrom">{{auth_user().mnemonic}}</p>
+                                </div>
+                                <p><b>{{ __('messages.mnemonic_mnemonicText1') }}</b></p>
+                                <div class="mp-Form-controlGroup">
+                                    <label class="mp-Form-controlGroup-label optional-label" for="Mnemonic">{{ __('messages.mnemonic_mnemonic') }}</label>
+                                    <input type="text" name="mnemonic" placeholder="{{ __('messages.mnemonic_mnemonic_placeholder') }}" class="mp-Input {{ errors.has('mnemonic') ? ' invalid' : '' }}"  value="" tabindex="1">
+                                </div>
+
+                                <h4>{{ __('messages.mnemonic_withdrawPin') }}</h4>
+                                <div class="linesOver">
+                                    <p class="textFrom">{{auth_user().withdrawpin}}</p>
+                                </div>
+
+                                <p><b>{{ __('messages.mnemonic_withdrawPinText') }}</b></p>
+                                <div class="mp-Form-controlGroup">
+                                    <label class="mp-Form-controlGroup-label optional-label" for="Mnemonic">{{ __('messages.mnemonic_withdrawPin') }}</label>
+                                    <input type="text" name="withdrawpin" placeholder="{{ __('messages.mnemonic_withdrawPin_placeholder') }}" class="mp-Input {{ errors.has('withdrawpin') ? ' invalid' : '' }}"  value="" tabindex="1" maxlength="6">
+                                </div>
+
+                                <p>{{ __('messages.mnemonic_mnemonicText2')|raw }}</p>
+
+                                <div class="mp-Form-controlGroup centered-control-group last-control-group">
+                                    <button id="account-login-button"
+                                        class="mp-Button mp-Button--primary width-button">
+                                        <span>{{ __('messages.mnemonic_continue') }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

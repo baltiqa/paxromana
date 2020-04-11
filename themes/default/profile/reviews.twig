@@ -1,0 +1,95 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+	<link href="/web/css/own_profile_detail.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+	<div id="page-wrapper">
+		<div id="content" class="l-page">
+		{% include 'profile.head-profile.twig' %}
+			<div class="l-main-left" style="width:100%;">
+				<div class="show-avg-ratings">
+					<table style="width:100%;background-color:#FFFFFF;">
+						<tr>
+							<th>{{ __('messages.profile_age') }}</th>
+							<th>1 {{ __('messages.profile_stars') }}</th>
+							<th>2 {{ __('messages.profile_stars') }}</th>
+							<th>3 {{ __('messages.profile_stars') }}</th>
+							<th>4 {{ __('messages.profile_stars') }}</th>
+							<th>5 {{ __('messages.profile_stars') }}</th>
+							<th>{{ __('messages.profile_rating') }}</th>
+						</tr>
+						<tr>
+							<td>{{ __('messages.profile_newer_than_1month') }}</td>
+							<td>{{month1count.rate1 == null ? 0 : month1count.rate1}}</td>
+							<td>{{month1count.rate2 == null ? 0 : month1count.rate2}}</td>
+							<td>{{month1count.rate3 == null ? 0 : month1count.rate3}}</td>
+							<td>{{month1count.rate4 == null ? 0 : month1count.rate4}}</td>
+							<td>{{month1count.rate5 == null ? 0 : month1count.rate5}}</td>
+							<td>({{month1 == 0 ? '5.00' :(month1|number_format(2)) }}<span class="mp-StarRating mp-StarRating--xs mp-StarRating--5">
+									<i></i>
+								</span>)</td>
+						</tr>
+						<tr>
+							<td>{{ __('messages.profile_newer_than_3month') }}</td>
+							<td>{{month2count.rate1 == null ? 0 : month2count.rate1}}</td>
+							<td>{{month2count.rate2 == null ? 0 : month2count.rate2}}</td>
+							<td>{{month2count.rate3 == null ? 0 : month2count.rate3}}</td>
+							<td>{{month2count.rate4 == null ? 0 : month2count.rate4}}</td>
+							<td>{{month2count.rate5 == null ? 0 : month2count.rate5}}</td>
+							<td>({{month3 == 0 ? '5.00' : (month3|number_format(2))}}<span class="mp-StarRating mp-StarRating--xs mp-StarRating--5">
+									<i></i>
+								</span>)</td>
+						</tr>
+						<tr>
+							<td>{{ __('messages.profile_older') }}</td>
+							<td>{{month3count.rate1 == null ? 0 : month3count.rate1}}</td>
+							<td>{{month3count.rate2 == null ? 0 : month3count.rate2}}</td>
+							<td>{{month3count.rate3 == null ? 0 : month3count.rate3}}</td>
+							<td>{{month3count.rate4 == null ? 0 : month3count.rate4}}</td>
+							<td>{{month3count.rate5 == null ? 0 : month3count.rate5}}</td>
+							<td>({{month3older == 0 ?'5.00' : (month3older|number_format(2))}}<span class="mp-StarRating mp-StarRating--xs mp-StarRating--5">
+									<i></i>
+								</span>)</td>
+						</tr>
+					</table>
+				</div>
+				<div class="mp-Alert mp-Alert--error">
+					<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+					<div>
+						<ul>
+							<li>
+								{{ __('messages.profile_antiphishing_warning')|raw }}</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="mp-Card mp-Card--rounded">
+					{% for comment in comments %}
+						<article class="user-review mp-Card-block">
+							<header class="user-review-header">
+								{{comment.created_at.diffForHumans(null,true,true)}}
+								<span class="mp-StarRating mp-StarRating--5 ">
+									{{ include('components.star_rating', {rating: comment.rating}) }}
+								</span>
+								{{comment.comment[:25]}}
+								<span style="float:right;" class="mp-text-meta">{{filter_username(comment.commenter.username)}}
+									~{{comment.order.price}}{{comment.order.currency}}
+								{% if comment.commenter.trusted() %}
+								(<i style="color:#00CF72;font-weight:bold;">{{ __('messages.profile_trusted_buyer') }}</i>
+								<img title="{{ __('messages.profile_trusted_buyer') }}" width="16" src="/web/images/check2.png">)
+								{% else %}
+								(<i style="color:red;font-weight:bold;">{{ __('messages.profile_new_buyer') }}</i>)
+								{% endif %}</span>
+							</header>
+						</article>
+					{% endfor %}
+				</div>
+				<br>
+				{{ comments.links | raw}}
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}
+

@@ -1,0 +1,98 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/sent_message.css" rel="stylesheet">
+
+	<style>
+		.mp-FooterAlternative {
+			position: absolute;
+		}
+	</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+	<div id="page-wrapper">
+		<div class="l-page">
+			<h1 class="page-header">
+				{{ __('messages.profile_message_title') }}
+				{{listing.user.username}}
+			</h1>
+			<section id="content">
+				<div class="mp-Card">
+					<div class="box-content">
+					{% if app.session.get('error') %}
+					<div class="mp-Alert mp-Alert--error">
+						<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+						<div>
+							{{ app.session.get('error') | raw }}
+						</div>
+					</div>
+				{% endif %}
+						<form id="asq-form" action="{{route('listing', {'id' : listing, 'slug' : str_slug(listing.title)})}}/message" method="post">
+						    {{ csrf_field() }}
+							<div class="tip mp-Card mp-Card-block mp-Card-block--highlight">
+								<h6>
+									{{ __('messages.profile_message_title1') }}
+								</h6>
+								<ul>
+									<li>{{ __('messages.profile_message_tips1') }}
+									</li>
+									<li>
+										{{ __('messages.profile_message_tips2')|raw }}
+									</li>
+									<li>
+										{{ __('messages.profile_message_tips3') }}
+									</li>
+									<li>
+										{{ __('messages.profile_message_tips4') }}
+									</li>
+								</ul>
+							</div>
+							<h3>{{ __('messages.profile_your_message') }}</h3>
+
+							<div class="form-field form-textarea">
+								<textarea class="mp-Textarea {{ errors.has('message') ? ' invalid' : '' }}" id="message" name="message" maxlength="10000" data-maxlength="10000">{{old("message")}}</textarea>
+							</div>
+
+							 <div class="mp-Form-controlGroup">
+                                            <img src="/captcha.html" />
+                                            <label class="mp-Form-controlGroup-label optional-label"
+                                                for="captcha">Captcha</label>
+                                            <input style="width:50%;" id="captcha" type="text" placeholder="captcha" name="captcha"
+                                                class="mp-Input {{ errors.has('captcha') ? ' invalid' : '' }}"
+                                                tabindex="2">
+                                            {% if errors.has('captcha') %}
+                                            <div
+                                                class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+                                                {{ errors.first('captcha') }}
+                                            </div>
+                                            {% endif %}
+                                </div>
+
+								<input type="checkbox" value="1" name="encrypt"/>{{ __('messages.profile_pgp') }}
+
+							<div class="buttonbar">
+								<input id="send-asq" type="submit" class="mp-Button mp-Button--primary" value="{{ __('messages.profile_sent') }}">
+							</div>
+
+							<h3>{{ __('messages.profile_pgp_key_of') }}
+								{{listing.user.username}}</h3>
+							<pre style="word-wrap: break-word; white-space: pre-wrap; line-height: normal;">{{listing.user.pgp_key}}</pre>
+
+
+						</form>
+					</div>
+				</div>
+
+				<p class="asq-disclaimer">
+				{{ __('messages.profile_disclaimer') }}
+				</p>
+
+			</section>
+		</div>
+	</div>
+{% endblock %}
+

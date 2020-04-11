@@ -1,0 +1,306 @@
+{% extends "layouts.app" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/message.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+	<div class="wide-layout" id="page-wrapper">
+
+		<div class="l-page indexpage" id="content" style="height: 800px;margin-bottom:150px;">
+			<div class="mp-Alert mp-Alert--error">
+				<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+				<li>
+				{{ __('messages.profile_antiphishing_warning')|raw }}
+				</li>
+			</div>
+
+			<div class="inbox-messages chatheader">
+				<div class="messages-left">
+					<div class="mp-Card message-left-header">
+						<div class="mp-Card-block">
+							<h1>{{ __('messages.header_messages') }}</h1>
+						</div>
+					</div>
+					<div class="message-left-header-shadow">
+						<div class="ConversationsToolsMolecule-root"></div>
+					</div>
+					<div class="message-left-part">
+						<div>
+							<ol class="ConversationsOrganism-listRoot">
+								{% for k, inbox in inboxes %}
+									<li class="ConversationsOrganism-listItem">
+										<div class="ConversationMolecule-root ConversationMolecule-{{id == inbox.thread.conversation_id ? 'rootOpen' : 'selling'}}">
+											<a href="{{ route('inbox.show', inbox.thread.conversation_id) }}#chat">
+												<div class="ConversationMolecule-leftUnit">
+													<div class="ConversationMolecule-thumbnailUnit">
+														<div class="ThumbnailAtom-root ThumbnailAtomSizes-lg ThumbnailAtomBorderRadii-xs" style="background-image: url(&quot;{{ inbox.withUser.getAvatar() }}&quot;);"></div>
+														<div class="ConversationMolecule-thumbnailProfilePictureUnit">
+															<span class="ProfilePictureAtom-root ProfilePictureAtomSizes-sm ProfilePictureAtom-rootBordered {{inbox.withUser.is_mod == 1 or inbox.withUser.is_headmod == 1 or inbox.withUser.is_admin == 1 ? 'staff' : ''}}">
+																<span>{{ inbox.withUser.username|first }}</span>
+															</span>
+														</div>
+													</div>
+												</div>
+												<div class="ConversationMolecule-rightUnit">
+													<h2 class="ConversationMolecule-title">{{ inbox.withUser.username }}</h2>
+													{% if not inbox.thread.is_seen and inbox.thread.user_id != auth_user().id %}
+														<span class="ConversationMolecule-titleBadgeUnit">
+															<span class="BadgeAtom-root">1</span>
+														</span>
+													{% endif %}
+													<div class="ConversationMolecule-body">
+														<div class="ConversationMolecule-meta">from
+															{{ inbox.withUser.username }}</div>
+														<div class="ConversationMolecule-latestMessageWrapper">
+															<span>{{ inbox.thread.message  | filter_message | str_limit(18)}}</span>
+															<p class="card-left card-{{inbox.withUser.is_mod == 1 or inbox.withUser.is_headmod == 1 or inbox.withUser.is_admin == 1 ? 'staff' : 'user'}}">{{inbox.withUser.is_mod == 1 or inbox.withUser.is_headmod == 1 or inbox.withUser.is_admin == 1 ? 'Romana Staff' : inbox.withUser.trader_type == 'individual' ? 'Vendor' : 'Buyer'  }}</p>
+														</div>
+													</div>
+													<footer>
+														<div class="ConversationMolecule-receivedDateUnit">
+															<span>{{inbox.thread.created_at.diffForHumans()}}</span>
+														</div>
+													</footer>
+												</div>
+											</a>
+										</div>
+									</li>
+								{% endfor %}
+
+							</ol>
+						</div>
+					</div>
+				</div>
+				<a name="chat"></a>
+				<div class="chatindividual part2">
+					<div class="chatbox">
+						<header>
+							<div class="ConversationTopicOrganism-root">
+								<div class="ConversationTopicOrganism-titleUnit">
+									<div class="ConversationTopicOrganism-backLinkUnit">
+									</div>
+									<h2 class="ConversationTopicOrganism-title">
+										{% if secondUser != null and inviter != null %}
+										<a href="/profile/{{secondUser.username}}">
+											<span class="ConversationTopicOrganism-profilePictureUnit">
+												<span class="ProfilePictureAtom-root ProfilePictureAtomSizes-md {{secondUser.is_mod == 1 or secondUser.is_headmod == 1 or secondUser.is_admin == 1 ? 'staff' : ''}}">
+													<span>{{secondUser.username|first}}</span>
+												</span>
+											</span> 
+											<span class="ConversationTopicOrganism-name">{{secondUser.username}}<p class="card-blanc card-{{secondUser.is_mod == 1 or secondUser.is_headmod == 1 or secondUser.is_admin == 1 ? 'staff' : 'user'}} ">{{secondUser.is_mod == 1 or secondUser.is_headmod == 1 or secondUser.is_admin == 1 ? 'Romana Staff' : secondUser.trader_type == 'individual' ? 'Vendor' : 'Buyer'  }}</p></span>
+										</a>
+										<a href="/profile/{{inviter.username}}">
+											<span class="ConversationTopicOrganism-profilePictureUnit">
+												<span class="ProfilePictureAtom-root ProfilePictureAtomSizes-md {{inviter.is_mod == 1 or inviter.is_headmod == 1 or inviter.is_admin == 1 ? 'staff' : ''}}">
+													<span>{{inviter.username|first}}</span>
+												</span>
+											</span> 
+											<span class="ConversationTopicOrganism-name">(Invited){{inviter.username}} <p class="card-blanc card-{{inviter.is_mod == 1 or inviter.is_headmod == 1 or inviter.is_admin == 1 ? 'staff' : 'user'}} ">{{inviter.is_mod == 1 or inviter.is_headmod == 1 or inviter.is_admin == 1 ? 'Romana Staff' : inviter.trader_type == 'individual' ? 'Vendor' : 'Buyer'  }}</p></span>
+										</a>
+										{% endif %}
+										<a href="/profile/{{recipient.username}}">
+											<span class="ConversationTopicOrganism-profilePictureUnit">
+												<span class="ProfilePictureAtom-root ProfilePictureAtomSizes-md {{recipient.is_mod == 1 or recipient.is_headmod == 1 or recipient.is_admin == 1 ? 'staff' : ''}}">
+													<span>{{recipient.username|first}}</span>
+												</span>
+											</span> 
+											<span class="ConversationTopicOrganism-name">{{recipient.username}} <p class="card-blanc card-{{recipient.is_mod == 1 or recipient.is_headmod == 1 or recipient.is_admin == 1 ? 'staff' : 'user'}}">{{recipient.is_mod == 1 or recipient.is_headmod == 1 or recipient.is_admin == 1 ? 'Romana Staff' : recipient.trader_type == 'individual' ? 'Vendor' : 'Buyer'  }}</p></span>
+											
+										</a>
+									</h2>
+									{% if inviter == null  %}
+									<form action="{{ route('invite.message',id) }}" method="post">
+									{{ csrf_field() }}
+									<div class="px-invite">
+									<button style="float:right;" class="mp-Button mp-Button--secondary mp-Button--xs searchnew" type="submit">
+									<span class="mp-Icon mp-svg-search style-scope mp-Header"></span>
+									</button>
+									<input style="float:right;width:60%;" class="mp-Input style-scope newinput" placeholder="Invite 1 friend.." name="username" type="text">
+									</div>
+									</form>
+									{% endif %}
+								</div>
+								<div></div>
+							</div>
+						</header>
+						<article>
+							<div class="MessagesOrganism-root">
+							<div class="LegalDisclaimerMolecule-root">{{ __('messages.inbox_warning')|raw }}
+									<a target="_blank" href="/wiki/43" rel="noopener noreferrer">{{ __('messages.inbox_read_more') }}
+										<span class="mp-Icon mp-Icon--xs mp-svg-arrow-right--action"></span>
+									</a>
+								</div>
+							{% for k, fam in messages %}
+								
+								<h3 class="DateHeadingMolecule-root">
+											<span>{{k}}</span>
+								</h3>
+								{% for msg in fam %}
+								{% if recipient.id == msg.sender.id %}
+									<div class="MessagesOrganism-group">
+										<ol class="MessagesOrganism-listRoot">
+											<li class="MessagesOrganism-listItem MessagesOrganism-listItem_from_otherparticipant">
+												<div>
+													<span>({{recipient.username}})</span>
+													<div class="MessageMolecule-root MessageMolecule-root_from_otherparticipant MessageMolecule-tail">
+														<div class="MessageMolecule-body">
+															<span class="Linkify">{{msg.message | filter_message}}</span>
+															<span class="MessageMolecule-receivedDatePlaceholder"></span>
+														</div>
+														<div class="MessageMolecule-meta ">
+															<span><small style="font-size:9px;">{{msg.created_at.toTimeString()}}</small></span>
+														</div>
+													</div>
+												</div>
+											</li>
+										</ol>
+									</div>
+								{% endif %}
+
+								{% if recipient.id != msg.sender.id %}
+									<div class="MessagesOrganism-group">
+										<ol class="MessagesOrganism-listRoot">
+											<li class="MessagesOrganism-listItem MessagesOrganism-listItem_from_me">
+												<div>
+													<span>({{msg.sender.username}})</span>
+													<div class="MessageMolecule-root MessageMolecule-root_from_me MessageMolecule-tail">
+														<div class="MessageMolecule-body">
+															<span class="Linkify">{{msg.message | filter_message}}</span>
+															<span class="MessageMolecule-receivedDatePlaceholder"></span>
+														</div>
+														<div class="MessageMolecule-meta MessageMolecule-sender">
+															<span><small>{{msg.created_at.toTimeString()}}</small></span>
+															<span class="MessageMolecule-readStatusWrapper">
+																{% if msg.is_seen %}
+																	<span class="MessageReadStatusAtom-root" title="{{ __('messages.inbox_read') }}">
+																		<div class="mp-sdk-svg-wrapper " style="width: 18px; height: 18px;">
+																			<i class="mp-sdk-svg mp-svg-checkmark-thick--success"></i>
+																		</div>
+																		<div class="mp-sdk-svg-wrapper " style="width: 18px; height: 18px;">
+																			<i class="mp-sdk-svg mp-svg-checkmark-thick--success"></i>
+																		</div>
+																	</span>
+																{% else %}
+																	<span class="MessageReadStatusAtom-root" title="{{ __('messages.profile_sent') }}">
+																		<div class="mp-sdk-svg-wrapper " style="width: 18px; height: 18px;">
+																			<i class="mp-sdk-svg mp-svg-checkmark-thick--secondary"></i>
+																		</div>
+																		<div class="mp-sdk-svg-wrapper " style="width: 18px; height: 18px;">
+																			<i class="mp-sdk-svg mp-svg-checkmark-thick--secondary"></i>
+																		</div>
+																	</span>
+																{% endif %}
+															</span>
+														</div>
+													</div>
+												</div>
+											</li>
+										</ol>
+									</div>
+								{% endif %}
+							{% endfor %}
+							{% endfor %}
+						</div>
+					</article>
+					<footer>
+						<div class="SmartSuggestionsOrganism-root"></div>
+						<section class="MessageComposerOrganism-root">
+							<form action="{{ route('send.message') }}" method="post" style="display: contents;">
+								{{ csrf_field() }}
+								<input name="recipient_id" type="hidden" value="{{id}}">
+								<div>
+									<textarea name="message" class="text-box {{ errors.has('message') ? ' invalid' : '' }}" placeholder="{{ __('messages.inbox_write_comment') }}"></textarea>
+								</div>
+								<div class="MessageComposerOrganism-send MessageComposerOrganism-empty">
+									<div>
+										<button title="Sturen" tabindex="0" class="mp-Button mp-Button--primary mp-Button--md">
+											<span class="mp-Icon mp-svg-send--inverse"></span>
+										</button>
+									</div>
+								</div>
+							</section>
+							<nav class="InlineComposerMenuMolecule-root">
+								<a href="#report" title="Report" style="float: right;" class="InlineComposerMenuOptionAtom-root">
+									<span class="InlineComposerMenuOptionAtom-iconAirlock">
+										<i class="mp-sdk-svg mp-svg-alert-blue"></i>
+									</span>
+								</a>
+
+								<span style="float:right;" title="Encrypt PGP" class="InlineComposerMenuOptionAtom-root">
+									<span class="InlineComposerMenuOptionAtom-iconAirlock">
+										<i class="mp-sdk-svg mp-pgp-image"></i>
+									</span>
+									{% if recipient.pgp_key != null %}
+										<input class="pgp" type="checkbox" name="encrypt" value="1">
+									{% else %}
+										<span class="InlineComposerMenuOptionAtom-label">N/A PGP</span>
+									{% endif %}
+								</span>
+							
+								
+							
+							</nav>
+						</form>
+					</footer>
+					<div id="report" class="overlay">
+						<div class="popup">
+							<h2>{{ __('messages.inbox_report_title') }}#{{id}}</h2>
+							<a class="close" href="#">&times;</a>
+							<div class="content">
+								{% if app.session.get('message') %}
+									<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+										<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+										<div>
+											{{ app.session.get('message') }}
+										</div>
+									</div>
+								{% endif %}
+								{% if not auth_user().ifReportConversationIsDone(id) %}
+									<p>{{ __('messages.inbox_report_text') }}</p>
+									<form action="{{ route('report.message',id) }}" method="post">
+										{{ csrf_field() }}
+
+										<div class="form-field">
+											<label>{{ __('messages.profile_report_reason') }}</label>
+											<input style="width:100%;height:80px;" id="reason" type="text" placeholder="{{ __('messages.profile_reason') }}" name="reason" class="mp-Input {{ errors.has('reason') ? ' invalid' : '' }}">
+										</div>
+
+										<div class="form-field">
+											<label>{{ __('messages.profile_report_extra') }}</label>
+											<input style="width:100%;height:80px;" id="notes" type="text" placeholder="{{ __('messages.profile_notes') }}" name="notes" class="mp-Input {{ errors.has('notes') ? ' invalid' : '' }}">
+										</div>
+
+										<div class="form-field">
+											<img src="/captcha.html"/>
+											<label class="mp-Form-controlGroup-label optional-label" for="captcha">Captcha</label>
+											<input style="width:50%;" id="captcha" type="text" placeholder="captcha" name="captcha" class="mp-Input {{ errors.has('captcha') ? ' invalid' : '' }}" tabindex="2">
+											{% if errors.has('captcha') %}
+												<div class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+													{{ errors.first('captcha') }}
+												</div>
+											{% endif %}
+										</div>
+
+										<div class="buttonbar">
+											<input type="submit" class="mp-Button mp-Button--primary" value="{{ __('messages.profile_sent') }}">
+										</div>
+									</form>
+								{% else %}
+									<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+										<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+										<div>
+									{{ __('messages.profile_report_received') }}
+										</div>
+									</div>
+								{% endif %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}
+

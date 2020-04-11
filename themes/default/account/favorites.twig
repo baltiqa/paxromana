@@ -1,0 +1,50 @@
+{% extends "account.master" %}
+
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_favourite.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+		<h2>{{ __('messages.account_fav_title')}}</h2>
+	{% if favorites.count != null %}
+		<section class="FavoriteSellersContainer-favorite_sellers_container">
+			<div class="ListHeader-headers-container">
+				<div class="ListHeader-button-container">
+					<form action="/account/favorites/remove" method="post">
+					  {{ csrf_field() }}
+					<button class="mp-Button mp-Button--primary mp-Button--md">
+						<span class="mp-Button-icon mp-Button-icon--left mp-svg-delete-white"></span>{{ __('messages.account_delete')}}</button>
+						                {% if errors.has('favorites')  %} <b>{{ __('messages.account_delete_of')}}</b> {% endif %}
+				</div>
+			</div>
+			<div class="list-container">
+				{% for favorite in favorites %}
+					<div class="mp-Listing-compact FavoriteSellerListItem-favorite-sellers-list-item">
+						<div class="mp-Listing-compact-body">
+							<div class="mp-Listing-compact-selector"><input name="favorites[]" value="{{favorite.id}}" type="checkbox"></div>
+							<div class="mp-Listing-compact-content">
+								<h4 class="mp-Listing-compact-title mp-Listing-compact-title--link">
+									<a href="{{route('listing', {'id' : favorite, 'slug' : str_slug(favorite.title)})}}">{{favorite.title}}</a>
+								</h4>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+				</form>
+			</div>
+		</section>
+	{% else %}
+		<section class="FavoritesContainer-favorites_container">
+			<div class="FavoritesList-list-container"></div>
+			<div class="mp-Alert mp-Alert--info-light">
+				<span class="mp-Alert-icon mp-svg-info"></span>
+				<div>
+					<span>
+						{{ __('messages.account_no_fav')}}
+					</span>
+				</div>
+			</div>
+		</section>
+	{% endif %}
+{% endblock %}
+

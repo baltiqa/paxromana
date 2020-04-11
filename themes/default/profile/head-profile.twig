@@ -1,0 +1,185 @@
+<section class="l-main-top">
+				<div class="profile-head mp-Card">
+					<div class="profile-head-backdrop mp-Card-block mp-Card-block--padded-no" style="padding-bottom: 36.73469387755102%">
+						<div class="profile-head-backdrop-stretchy" style="background-image: url('{{ profile.getAvatarBackground() }}');">
+							<div class="profile-head-image">
+								<img src="{{ profile.getAvatar() }}">
+							</div>
+							<div class="profile-head-title">
+								{% if profile.is_admin == 1 %}
+									<button class="profile-head-title-name mp-Button mp-Button--black mp-Button--sm " title="{{ profile.display_name != null ? profile.display_name : profile.username }}" disabled>{% if ( (auth_user().is_admin == 1) and (auth_user().username == profile.username)) %} <a style="text-decoration: none;color:white;" href="/panel">{{ profile.display_name != null ? profile.display_name : profile.username }}</a>  {% else %} {{ profile.display_name != null ? profile.display_name : profile.username }} {% endif %}</button><br>
+										<button class="button mp-Button mp-Button--dangerous mp-Button--sm" title="{{ __('messages.profile_rank1') }} - Pax Romana" disabled>
+											Roman {{ __('messages.profile_rank1') }}
+										</button>
+								{% elseif profile.is_mod == 1 %}
+									<button class="profile-head-title-name mp-Button mp-Button--black mp-Button--sm " title="{{ profile.display_name != null ? profile.display_name : profile.username }}" disabled>{% if ( (auth_user().is_mod == 1) and (auth_user().username == profile.username)) %} <a style="text-decoration: none;color:white;" href="/panel">{{ profile.display_name != null ? profile.display_name : profile.username }}</a>  {% else %} {{ profile.display_name != null ? profile.display_name : profile.username }} {% endif %}</button><br>
+										<button class="button mp-Button mp-Button--mod mp-Button--sm" title="{{ profile.is_headmod == 1 ? __('messages.profile_rank2') : __('messages.profile_rank3') }} - Pax Romana" disabled>
+											{{ profile.is_headmod == 1 ? __('messages.profile_rank2') : __('messages.profile_rank3')  }}
+										</button>
+								{% else %}
+									<button class="profile-head-title-name mp-Button mp-Button--black mp-Button--sm" title="{{ profile.display_name != null ? profile.display_name : profile.username }}" disabled>{{ profile.display_name != null ? profile.display_name : profile.username }} ({{profile.orders.count}}) {% if profile.trader_type == "individual"  %}({{profile.averageRate() == 0 ? '5.00' : profile.averageRate() | number_format(2) }}<span class="mp-StarRating mp-StarRating--xs mp-StarRating--5"><i></i></span>){% endif %}</button><br>
+										{% if auth_user().id != profile.id %}
+											<button id="report-seller-button" class="button mp-Button mp-Button--secondary mp-Button--sm" title="{{ __('messages.profile_report_seller') }}">
+												<a href="#report">
+													<span class="mp-Icon mp-svg-alert-blue"></span>{{ __('messages.profile_report') }}  {{profile.trader_type == "individual" ? __('messages.profile_seller') : __('messages.profile_buyer')}}</a>
+											</button>
+										{% if auth_user().isBlocked(profile) %}
+										<a href="{{route('profile.unblock',profile.username)}}" class="button mp-Button mp-Button--secondary mp-Button--sm" title="{{ __('messages.profile_block') }}">
+										{{ __('messages.profile_block') }}
+										</a>
+										{% else %}
+										<a href="{{route('profile.block',profile.username)}}" class="button mp-Button mp-Button--secondary mp-Button--sm" title="{{ __('messages.profile_unblock') }}">
+										{{ __('messages.profile_unblock') }}
+										</a>
+										{% endif %}
+										<br>
+										{% endif %}
+										{% if profile.trader_type == "individual" %}
+										<button style="background-color:#eda566" class="button mp-Button mp-Button--primary mp-Button--sm" title="{{ __('messages.profile_seller') }} " disabled>
+												{{ __('messages.profile_seller') }} 
+										</button>
+										{% if profile.has_fe %}
+											<button style="color:black;background-color:orange;" class="button mp-Button mp-Button--primary mp-Button--sm" title="100% FE Rights" disabled>
+												100% FE Rights
+											</button>
+										{% else %}
+											<button style="color:black;" class="button mp-Button mp-Button--primary mp-Button--sm" title="100% Escrow Rights" disabled>
+												100% Escrow Rights
+											</button>
+										{% endif %}
+									
+										{% if profile.on_vacation == 1 %}
+											<button style="background-color:#eda566" class="button mp-Button mp-Button--primary mp-Button--sm" title="{{ __('messages.profile_vacation') }} " disabled>
+												{{ __('messages.profile_vacation') }} 
+											</button>
+										{% endif %}
+										{% else %}
+										<button style="background-color:#eda566" class="button mp-Button mp-Button--primary mp-Button--sm" title="{{ __('messages.profile_buyer') }} " disabled>
+												{{ __('messages.profile_buyer') }} 
+										</button>
+										{% endif %}
+
+
+										{% if profile.banned_at != null %}
+											<button class="button mp-Button mp-Button--dangerous mp-Button--sm" title="{{ __('messages.profile_banned') }}" disabled>
+												{{ __('messages.profile_banned') }} 
+											</button>
+										{% endif %}
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div class="profile-head-info mp-Card-block mp-Card-block--custom-padleft">
+						<div class="user-reviews-placeholder hidden"></div>
+						<div class="profile-head-info-item">
+							<b>{{ profile.created_at.diffForHumans(null, true) }}</b>
+							{{ __('messages.profile_activelong') }} Romana&nbsp;&nbsp;&nbsp;&nbsp; 
+							{% if profile.is_admin == 1 or profile.is_mod == 1%}{{ __('messages.profile_lastactive') }} 
+								<b>N/A</b>
+								{% else %}{{ __('messages.profile_lastactive') }} 
+								<b>{{ profile.last_login_at|date("d M Y") }}</b>
+							{% endif %}
+						</div>
+						{% if auth_user().id != profile.id %}
+						<div class="save-seller-button">
+							<div id="save-seller">
+								<form id="save-seller-form" action="{{route('profile.follow',profile.username)}}">
+									<button id="save-seller-button" class="button mp-Button mp-Button--secondary mp-Button--sm" title="{{ __('messages.profile_follow') }}">
+										{% if auth_user().getIsFollowed(profile) %}
+										<span class="mp-Button-icon mp-svg-following"></span>&nbsp;&nbsp;&nbsp;{{ __('messages.profile_unfollow') }} 
+										{% else %}
+										<span class="mp-Button-icon mp-svg-follow"></span>&nbsp;&nbsp;&nbsp;{{ __('messages.profile_follow') }} 
+										{% endif %}
+									</button>
+								</form>
+							</div>
+						</div>
+						{% endif %}
+
+
+
+					</div>
+					<div class="mp-Card-block mp-Card-block--custom-padtop">
+						<div class="mp-Tab-bar profile-head-tab">
+							<a class="mp-Tab {{ MetaTag.get('sub_id') == 1 ? 'mp-Tab--selected' : ''}}" href="/profile/{{ profile.username }}">{{ __('messages.profile_tab1') }}</a>
+							{% if profile.is_admin != 1 and profile.is_mod != 1 and profile.trader_type == "individual" %}
+								<a class="mp-Tab {{ MetaTag.get('sub_id') == 2 ? 'mp-Tab--selected' : ''}}" href="/profile/{{ profile.username }}/store">{{ __('messages.profile_tab2') }}</a>
+								<a class="mp-Tab {{ MetaTag.get('sub_id') == 3 ? 'mp-Tab--selected' : ''}}" href="/profile/{{ profile.username }}/ratings">{{ __('messages.profile_tab3') }}({{profile.count_reviews()}})</a>
+							{% endif %}
+							{% if auth_user().id != profile.id %}
+								<a class="mp-Tab " href="/profile/{{ profile.username }}/sendmessage">{{ __('messages.profile_tab4') }}</a>
+							{% endif %}
+							{% if auth_user().id == profile.id %}
+								<a class="mp-Tab" href="/account/edit_profile/me"><span class="mp-Icon mp-svg-pencil"></span>{{ __('messages.profile_tab5') }}</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</section>
+			{% if app.session.get('message') %}
+			<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+				<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+				<div>
+				{{ app.session.get('message') | raw }}
+				</div>
+			</div>
+			{% endif %}
+
+			<div id="report" class="message">
+						<div class="popup">
+							<div class="message-box-header">
+							{{ __('messages.profile_report_title') }}
+							</div>
+							<a class="close" href="#">&times;</a>
+							<div class="content">
+								{% if app.session.get('message') %}
+									<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+										<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+										<div>
+											{{ app.session.get('message') }}
+										</div>
+									</div>
+								{% endif %}
+								{% if not profile.ifReportIsDone(auth_user()) %}
+									<p>{{ __('messages.profile_report_text') }}</p>
+									<form action="{{ route('profile.report',[profile.username]) }}" method="post">
+										{{ csrf_field() }}
+
+										<div class="form-field">
+											<label>{{ __('messages.profile_report_reason') }}</label>
+											<input style="width:100%;height:80px;" id="reason" type="text" placeholder="{{ __('messages.profile_reason') }}" name="reason" class="mp-Input {{ errors.has('reason') ? ' invalid' : '' }}">
+										</div>
+
+										<div class="form-field">
+											<label>{{ __('messages.profile_report_extra') }}</label>
+											<input style="width:100%;height:80px;" id="notes" type="text" placeholder="{{ __('messages.profile_notes') }}" name="notes" class="mp-Input {{ errors.has('notes') ? ' invalid' : '' }}">
+										</div>
+
+										<div class="form-field">
+											<img src="/captcha.html"/>
+											<label class="mp-Form-controlGroup-label optional-label" for="captcha">Captcha</label>
+											<input style="width:50%;" id="captcha" type="text" placeholder="captcha" name="captcha" class="mp-Input {{ errors.has('captcha') ? ' invalid' : '' }}" tabindex="2">
+											{% if errors.has('captcha') %}
+												<div class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+													{{ errors.first('captcha') }}
+												</div>
+											{% endif %}
+										</div>
+									<div class="content-footer">
+										<div class="buttonbar">
+											<input type="submit" class="mp-Button mp-Button--primary" value="{{ __('messages.profile_sent') }}">
+										</div>
+									</div>
+									</form>
+								{% else %}
+									<div id="msg-saved-seller" class="mp-Alert mp-Alert--success">
+										<span class="mp-Alert-icon mp-svg-checkmark-circled-white"></span>
+										<div>
+											{{ __('messages.profile_report_received') }}
+										</div>
+									</div>
+								{% endif %}
+
+							</div>
+						</div>
+					</div>

@@ -1,0 +1,101 @@
+{% extends "layouts.frontpage" %}
+
+{% block css %}
+	<link href="{{ env('WEBSITE_URL') }}/web/css/index.css" rel="stylesheet">
+{% endblock %}
+{% block navbar %}
+	<header>
+		<div class="mp-Header-ribbonTop"></div>
+		<div class="mp-Header-ribbonBottom"></div>
+	</header>
+{% endblock %}
+{% block content %}
+	<div id="page-wrapper">
+		<div class="l-page pagelog">
+			<section class="l-main-right">
+				<a class="pagelogo" href="/" title="Pax Romana"></a>
+				{% include 'auth.flags.twig' %}
+				<div class="mp-Alert " style="background-color:#D4EFFA;">
+					<span class="mp-Alert-icon mp-svg-info"></span>
+					<div>
+						<li style="color:black;">{{ __('messages.session_title') }}</li>
+					</div>
+				</div>
+				<div class="mp-Card mp-Card--rounded login">
+					{% if errors.has('username') or errors.has('password')  %}
+						<div class="mp-Alert mp-Alert--error">
+							<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+							<div>
+								<ul>
+									<li>{{ __('messages.login_error') }}</li>
+								</ul>
+							</div>
+						</div>
+					{% endif %}
+					{% if app.session.get('message') %}
+						<div class="mp-Alert mp-Alert--error">
+							<span class="mp-Alert-icon mp-svg-alert--inverse"></span>
+							<div>
+								{{ app.session.get('message') }}
+							</div>
+						</div>
+					{% endif %}
+					<div class="mp-Card-block">
+						<div class="mp-Form mp-Form--aligned">
+							<form id="account-login-form" class="new-design-form" method="post" action="{{ route('login') }}">
+								{{ csrf_field() }}
+								<div class="form-squeeze">
+									<div class="mp-Form-controlGroup">
+										<label class="optional-label" for="username">{{ __('messages.login_username') }}</label>
+										<input type="text" name="username" placeholder="{{ __('messages.login_username') }}" class="mp-Input {{ errors.has('username') ? ' invalid' : '' }}" value="{{ old('username') }}" tabindex="1" required>
+									</div>
+									<div class="mp-Form-controlGroup">
+										<label class="optional-label" for="password">{{ __('messages.login_pasword') }}</label>
+										<input id="password" type="password" placeholder="{{ __('messages.login_pasword') }}" name="password" class="mp-Input {{ errors.has('username') ? ' invalid' : '' }}" tabindex="2" required>
+									</div>
+									<div class="mp-Form-controlGroup">
+										<label class="optional-label" for="captcha">{{ __('messages.login_captcha') }}</label>
+										<img src="/captcha.html"/>
+										<input id="captcha" type="text" placeholder="{{ __('messages.login_captcha_text') }}" name="captcha" class="mp-Input {{ errors.has('captcha') ? ' invalid' : '' }}" tabindex="2" required>
+										{% if errors.has('captcha') %}
+											<div class="mp-Form-controlGroup-validationMessage mp-Form-controlGroup-validationMessage--error">
+												{{ errors.first('captcha') }}
+											</div>
+										{% endif %}
+									</div>
+									<div class="mp-Form-controlGroup">
+										<button class="mp-Button mp-Button--primary">
+											<span>{{ __('messages.login_button') }}</span>
+										</button>
+										<a href="/register" class="mp-Button mp-Button--register">
+											<span>{{ __('messages.register_button') }}</span>
+										</a>
+									</div>
+									<div class="mp-Form-controlGroup">
+										<a class="mp-TextLink" href="/verify" tabindex="3">{{ __('messages.verify_mirror') }}</a>
+										<div class="godlike mp-Icon mp-svg-info">
+											<span class="godliketext godlike-right">{{ __('messages.verify_mirror_warning') }}</span>
+										</div><br>
+										<a class="mp-TextLink" href="/password/reset" tabindex="3">{{ __('messages.forget_password') }}?</a>
+									</div>
+									<center>
+										<q>{{ __('messages.smart_text') }}</q>
+									</center>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</section>
+		<div class="index-log mp-FooterAlternative ">
+						<a  href="http://dreadditevelidot.onion/d/RomanRoad">
+							<img width="30" title="Pax Romana Forum" src="/web/images/dread.png"/>
+						</a>
+						<span class="footer-draw"></span>
+							<a  href="http://raptortiabg7uyez.onion/">
+							<img width="30" title="Raptor Get your links safely" src="/web/images/raptor.png"/>
+						</a>
+				</div>	</div>
+	</div>
+{% endblock %}
+

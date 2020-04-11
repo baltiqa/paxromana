@@ -1,0 +1,212 @@
+{% extends "account.master" %}
+{% block css %}
+	<link href="{{ setting('url') }}/web/css/account_ads.css" rel="stylesheet">
+{% endblock %}
+
+{% block user_area %}
+
+	<section id="content">
+		<h2>My Orders</h2>
+		<div id="seller-panel">
+			<div class="canvas">
+				{% if orders.count != 0 %}
+					<div id="ad-listing-table" class="table ad-listing-container seller">
+						<div id="table-head-stickies" class="sticky">
+							<div id="scroll-under-top-border"></div>
+						</div>
+						<div id="ad-listing-table-body" class="table-body">
+							{% for order in orders %}
+								<div class="row ad-listing compact">
+									<div class="cells">
+										<div class="cell icon-column">
+											<div class="check">
+												<label>
+													<b>ID:
+													</b>
+													{{order.id}}</label>
+											</div>
+										</div>
+										<div class="cell thumbnail-column">
+											<div class="thumbnail-wrapper">
+												<a href="{{ route('account.purchase-history.show', order) }}">
+													<img src="{{order.listing.getPhoto() == null ? '/web/images/noimage.png' : order.listing.getPhoto() }}">
+												</a>
+											</div>
+										</div>
+										<div class="cell">
+										</div>
+										<div class="cell description-column">
+											<a class="title" href="{{ route('account.purchase-history.show', order) }}">
+												<span>{{ order.product_title }}</span>
+											</a>
+											<div class="item">
+												<label>{{ __('messages.order_item') }}</label>
+												#{{ order.hash }}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.profile_seller') }}</label><br><a href="/profile/{{ order.seller.username }}">{{ order.seller.username }}</a>
+											</div>
+											<div class="item">
+												<label>{{ __('messages.account_sale_shipping_method') }}</label><br>{{ order.shipping.name  }}/{{ order.shipping.days  }}{{ __('messages.account_listings_days') }}/
+												{% if order.currency == "BTC" %}
+												{{ order.shipping_fee }}BTC 
+												{% elseif order.currency == "LTC" %}
+												{{ order.shipping_fee }}LTC
+												{% elseif order.currency == "XMR" %}
+												{{ order.shipping_fee }}XMR
+												{% endif %}
+											</div>
+										</div>
+										<div class="cell description-column">
+											<div class="item">
+												<label>{{ __('messages.account_purschased') }}:</label><br>{{ order.created_at.toFormattedDateString }}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.browse_news') }}:</label><br>{{ order.updated_at.toFormattedDateString }}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.listing_quantity') }}:</label><br><b>{{ order.amount }}
+													{{ __('messages.order_item') }}(s)</b>
+											</div>
+										</div>
+										<div class="cell position-column features-column">
+											<div class="item">
+												{% if order.status == "accepted" %}
+													<label>{{ __('messages.account_auto_cancelled') }}:</label><br>
+													<button class="mp-Button mp-Button--dangerous mp-Button--xs" disabled>
+														{% if order.auto_final|date('Y-m-d H:i:s')  < "now"|date('Y-m-d H:i:s') %}
+															0 {{ __('messages.account_listings_days') }} / 0 {{ __('messages.account_listings_hou') }} / 0 {{ __('messages.account_listings_min') }} - 0 {{ __('messages.account_listings_sec') }}
+														{% else %}
+															{{order.elapsed('auto_final').days }}
+															{{ __('messages.account_listings_days') }}
+															{{order.elapsed('auto_final').hours}}
+															{{ __('messages.account_listings_hou') }}
+															{{order.elapsed('auto_final').minutes}}
+															{{ __('messages.account_listings_min') }}
+															{{order.elapsed('auto_final').seconds}}
+															{{ __('messages.account_listings_sec') }}
+														{% endif %}
+													</button><br>
+												{% endif %}
+												{% if order.status == "processing" %}
+													<label>{{ __('messages.account_auto_cancelled') }}:</label><br>
+													<button class="mp-Button mp-Button--dangerous mp-Button--xs" disabled>
+														{% if order.auto_final|date('Y-m-d H:i:s')  < "now"|date('Y-m-d H:i:s') %}
+															0 {{ __('messages.account_listings_days') }} / 0 {{ __('messages.account_listings_hou') }} / 0 {{ __('messages.account_listings_min') }} - 0 {{ __('messages.account_listings_sec') }}
+														{% else %}
+															{{order.elapsed('auto_final').days}}
+															{{ __('messages.account_listings_days') }}
+															{{order.elapsed('auto_final').hours}}
+															{{ __('messages.account_listings_hou') }}
+															{{order.elapsed('auto_final').minutes}}
+															{{ __('messages.account_listings_min') }}
+															{{order.elapsed('auto_final').seconds}}
+															{{ __('messages.account_listings_sec') }}
+														{% endif %}
+													</button><br>
+												{% endif %}
+
+												{% if order.status == "shipped" %}
+													<label>{{ __('messages.account_auto_finalized') }}:</label><br>
+													<button class="mp-Button mp-Button--dangerous mp-Button--xs" disabled>
+														{% if order.auto_final|date('Y-m-d H:i:s')  < "now"|date('Y-m-d H:i:s') %}
+															0 {{ __('messages.account_listings_days') }} / 0 {{ __('messages.account_listings_hou') }} / 0 {{ __('messages.account_listings_min') }} - 0 {{ __('messages.account_listings_sec') }}
+														{% else %}
+															{{order.elapsed('auto_final').days + (order.until('auto_final').weeks*7 )}}
+															{{ __('messages.account_listings_days') }}
+															{{order.elapsed('auto_final').hours}}
+															{{ __('messages.account_listings_hou') }}
+															{{order.elapsed('auto_final').minutes}}
+															{{ __('messages.account_listings_min') }}
+															{{order.elapsed('auto_final').seconds}}
+															{{ __('messages.account_listings_sec') }}
+														{% endif %}
+													</button><br>
+												{% endif %}
+												{% if order.status == "finalized" %}
+													<button class="mp-Button mp-Button--green mp-Button--xs" disabled>{{ __('messages.account_order_status3') }}</button><br>
+												{% endif %}
+												{% if order.status == "disputed" %}
+													<button class="mp-Button mp-Button--dangerous mp-Button--xs" disabled>{{ __('messages.account_order_status4') }}</button><br>
+												{% endif %}
+
+
+												<label>{{ __('messages.order_item2') }}:</label><br>
+												<span class="{{ order.currency == 'BTC' ? 'btc20' : order.currency == 'XMR' ? 'xmr20' : 'ltc20' }}"></span>
+												{{order.payment_type.payment_name}}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.order_item3') }}:</label><br>
+												
+												{{ order.price  }} {{order.currency}}
+											</div>
+											<div class="item">
+												<label>{{ __('messages.wallet_table_3') }}</label><br>
+												<span style="{{order.status == "processing" ? "color:black" : order.status == "shipped" ? "color:blue;" : order.status == "cancelled" ? "color:red;" : order.status == "disputed" ? "color:red;" : "color:green;" }}">
+													{{order.status}}</span><br>
+											</div>
+											<div class="cta">
+												{% if order.status == "shipped" %}
+													<form action="{{ route('account.dispute.create', order.hash) }}" method="post">
+														{{ csrf_field() }}
+														<button type="submit" class="mp-Button mp-Button--dangerous mp-Button--xs">
+															{{ __('messages.account_sale_create_dispute') }}
+														</button>
+													</form>
+													<form action="{{ route('account.finalize.order', order.hash) }}" method="post">
+															{{ csrf_field() }}
+														<button type="submit" class="mp-Button mp-Button--green mp-Button--xs">
+															{{ __('messages.account_sale_finalize_order') }}
+														</button>
+													</form>
+												{% endif %}
+												{% if order.status == "disputed" %}
+													<a href="{{ route('account.dispute.show', order.dispute.id) }}" class="mp-Button--xs mp-Button--primary">
+														{{ __('messages.account_sale_see_dispute') }}
+													</a>
+												{% endif %}
+
+												{% if order.status == "cancelled" %}
+													<button type="submit" class="mp-Button mp-Button--dangerous mp-Button--xs">
+														{{ __('messages.account_order_status5') }}
+													</button>
+												{% endif %}
+
+												{% if order.status == "finalized" %}
+												<a href="{{ route('account.purchase-history.feedback', order) }}" class="mp-Button--xs mp-Button--primary">
+														{{ __('messages.account_sale_leave_feedback') }}
+												</a>
+												{% endif %}
+												<a href="{{ route('account.purchase-history.show', order) }}" class="mp-Button--xs mp-Button--primary">
+														{{ __('messages.account_sale_details') }}
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						{% else  %}
+							<div class="mp-Alert mp-Alert--info-light">
+								<span class="mp-Alert-icon mp-svg-info"></span>
+								<div>
+									<span>
+										{{ __('messages.account_no_orders') }}
+									</span>
+								</div>
+							</div>
+
+						{% endif %}
+
+						<div class="mp-PaginationControls">
+							{{orders.links | raw}}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+{% endblock %}
+
